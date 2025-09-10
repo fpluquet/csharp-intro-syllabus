@@ -118,7 +118,7 @@ export default withMermaid(defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/fpluquet/csharp-intro-syllabus/edit/main/docs/:path',
+      pattern: 'https://github.com/fpluquet/csharp-intro-syllabus/edit/master/docs/:path',
       text: 'Modifier cette page'
     },
 
