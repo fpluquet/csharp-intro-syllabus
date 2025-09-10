@@ -2,6 +2,7 @@
 
 Vous trouverez le rendu de ce site à l'adresse suivante: [https://fpluquet.github.io/csharp-intro-syllabus](https://fpluquet.github.io/csharp-intro-syllabus)
 
+## Introduction
 Ce document explique comment le site du Syllabus a été structuré et comment le maintenir.
 
 ## Structure du projet
