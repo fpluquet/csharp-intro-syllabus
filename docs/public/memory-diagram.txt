@@ -1,0 +1,13 @@
+<!-- This is a placeholder for a memory diagram image. In a real implementation, this would be a real image file. -->
+<!-- Below is ASCII art to represent a memory diagram -->
+
+   Stack                      Heap
++----------+            +-------------+
+| int a=10 |            |  int[3]     |
++----------+            |+-----+-----+|
+| int b=20 |            || 100 | 200 ||
++----------+            |+-----+-----+|
+| int[]arr |----------->|| 300 |     ||
++----------+            |+-----+-----+|
+|          |            |             |
++----------+            +-------------+
