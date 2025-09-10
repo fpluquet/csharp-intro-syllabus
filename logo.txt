@@ -1,0 +1,9 @@
+<!-- This is a placeholder for a logo image. In a real implementation, this would be a real image file. -->
+<!-- Below is ASCII art to represent a placeholder logo -->
+
+   _____   __  __                  
+  / ____| |  \/  |                 
+ | |      | \  / | ___  _ __   ___ 
+ | |      | |\/| |/ _ \| '_ \ / _ \
+ | |____  | |  | | (_) | | | |  __/
+  \_____| |_|  |_|\___/|_| |_|\___|
