@@ -46,19 +46,6 @@ export default withMermaid(defineConfig({
     // Navigation principale
     nav: [
       { text: 'Accueil', link: '/' },
-      {
-        text: 'Chapitres',
-        items: [
-          { text: 'Introduction', link: '/0-introduction' },
-          { text: 'Variables et Types', link: '/1-variables-types' },
-          { text: 'Opérateurs', link: '/2-operateurs' },
-          { text: 'Conversions', link: '/3-conversions' },
-          { text: 'Structures de Contrôle', link: '/4-structures-controle' },
-          { text: 'Mémoire', link: '/5-memoire' },
-          { text: 'Tableaux et Collections', link: '/6-tableaux-collections' },
-          { text: 'Fonctions', link: '/7-fonctions' }
-        ]
-      },
       { text: 'HELHa', link: 'https://www.helha.be', target: '_blank' },
     ],
 
@@ -85,13 +72,14 @@ export default withMermaid(defineConfig({
         link: '/4-structures-controle',
       },
       {
-        text: 'Organisation de la Mémoire',
-        link: '/5-memoire',
+        text: 'Tableaux et Collections',
+        link: '/5-tableaux-collections',
       },
       {
-        text: 'Tableaux et Collections',
-        link: '/6-tableaux-collections',
-      },      {
+        text: 'Organisation de la Mémoire',
+        link: '/6-memoire',
+      },
+      {
         text: 'Fonctions',
         link: '/7-fonctions',
       },

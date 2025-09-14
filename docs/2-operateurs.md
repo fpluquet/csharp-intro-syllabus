@@ -1,5 +1,7 @@
 # Les opérateurs
 
+Imaginez les opérateurs comme de petits outils sur votre établi: additionneurs, compareurs, loupe logique… On choisit l’outil, on l’applique à une ou deux valeurs, et on obtient un résultat. Bien les connaître, c’est écrire moins et dire mieux.
+
 Les opérateurs sont des symboles qui réalisent des opérations sur une ou plusieurs valeurs (appelées opérandes). Ils sont fondamentaux en programmation car ils permettent de manipuler les données.
 
 ## Opérateurs arithmétiques binaires
@@ -170,6 +172,12 @@ L'opérateur `&&` n'évalue pas la seconde condition si la première est déjà 
 L'opérateur `||` n'évalue pas la seconde condition si la première est déjà vraie.
 :::
 
+:::: tip Erreurs fréquentes
+- Confondre `&&` (logique, court-circuit) et `&` (binaire, évalue toujours les deux côtés) dans des conditions.
+- Confondre `||` (logique, court-circuit) et `|` (binaire, évalue toujours les deux côtés) dans des conditions.
+- Mettre des effets de bord dans la seconde condition (ex.: `i++`) et être surpris qu’elle ne s’exécute pas avec `&&` si la première est fausse.
+::::
+
 ## Opérateurs logiques bit à bit
 
 Ces opérateurs agissent sur la représentation binaire (en bits) des nombres. Ils sont utiles pour les manipulations de bas niveau, le travail avec des masques de bits et l'optimisation.
@@ -256,6 +264,37 @@ Console.WriteLine(sousChaine); // "Du"
 La comparaison des chaînes avec `==` est sensible à la casse. Pour une comparaison insensible à la casse, utilisez `string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase)`.
 :::
 
+## Opérateur conditionnel (ternaire)
+
+L'opérateur conditionnel, dit « ternaire », permet de choisir rapidement entre deux valeurs en fonction d'une condition. Il s'écrit sous la forme:
+
+`condition ? valeurSiVrai : valeurSiFaux`
+
+- Si `condition` est vraie, l'expression renvoie `valeurSiVrai`.
+- Sinon, elle renvoie `valeurSiFaux`.
+
+:::: tip Exemple
+```csharp
+int age = 20;
+string statut = age >= 18 ? "majeur" : "mineur";
+Console.WriteLine(statut); // "majeur"
+
+// Utilisation avec des expressions plus complexes
+int a = 5, b = 10;
+int max = (a > b) ? a : b; // renvoie 10
+Console.WriteLine($"Le plus grand est {max}");
+
+// Combiner avec l'interpolation de chaîne
+bool estConnecte = true;
+Console.WriteLine($"Utilisateur {(estConnecte ? \"connecté\" : \"non connecté\")}");
+```
+::::
+
+:::: warning Lisibilité et précédence
+- Évitez d'imbriquer plusieurs opérateurs ternaires sans parenthèses: cela réduit la lisibilité. Préférez un `if/else` ou ajoutez des parenthèses explicites.
+- L'opérateur ternaire a une précédence inférieure à la plupart des opérateurs arithmétiques mais supérieure à l'affectation; utilisez des parenthèses si nécessaire pour lever toute ambiguïté.
+::::
+
 ## Priorité des opérateurs
 
 La priorité des opérateurs détermine l'ordre dans lequel les expressions sont évaluées. Comprendre cette priorité est essentiel pour éviter des erreurs de logique dans vos programmes.
@@ -321,4 +360,20 @@ En cas de doute sur la priorité des opérateurs, utilisez des parenthèses pour
 | Relationnels | `==`, `!=`, `<`, `>`, `<=`, `>=` | Comparer des valeurs |
 | Logiques | `&&`, `||`, `!` | Combiner des conditions |
 | Bit à bit | `&`, `|`, `^`, `~`, `<<`, `>>` | Manipuler des bits |
+| Conditionnel | `?:` | Choisir entre deux valeurs selon une condition |
 | Chaînes | `+`, `==`, `!=` | Manipuler du texte |
+
+
+## En résumé
+
+- Les opérateurs sont vos outils: choisissez-les pour exprimer clairement une intention (calculer, comparer, combiner des conditions).
+- Division d’entiers: `int / int` tronque. Mélangez les types (`double`) si vous voulez des décimaux.
+- `==` compare, `=` affecte: ne les confondez jamais.
+- `&&`/`||` court-circuitent; `&`/`|` évaluent toujours les deux côtés.
+- En cas de doute sur la priorité, ajoutez des parenthèses pour la lisibilité.
+
+Checklist pratique
+- Mon expression est-elle lisible sans hésitation ?
+- Ai-je besoin d’un résultat décimal (et donc de `double`/`decimal`) ?
+- Ma condition supporte-t-elle le court-circuit ou ai-je des effets de bord cachés ?
+- Ai-je vérifié la casse et la culture pour les comparaisons de chaînes ?
