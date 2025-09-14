@@ -16,6 +16,6 @@ Ce site a été généré avec VitePress pour une meilleure lisibilité du conte
 - [Les opérateurs](./2-operateurs.md)
 - [Les conversions de types](./3-conversions.md)
 - [Les structures de contrôle](./4-structures-controle.md)
-- [L'organisation de la mémoire](./5-memoire.md)
-- [Les tableaux et collections](./6-tableaux-collections.md)
+- [Les tableaux et collections](./5-tableaux-collections.md)
+- [L'organisation de la mémoire](./6-memoire.md)
 - [Les fonctions](./7-fonctions.md)
