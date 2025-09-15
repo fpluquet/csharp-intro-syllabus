@@ -30,8 +30,32 @@
   - **fonctionnel** (programme = ensemble de fonctions qui sont appelées les unes sur les autres)
   - **logique** (programme = règles et faits)
 - Cet aspect influence le code produit, la méthode, etc.
+- En C#, on peut utiliser le procédural, l'orienté objet et le fonctionnel.
 
-## Console .NET
+## Version du C#
+
+- Le C# évolue régulièrement, avec des nouveautés chaque année.
+- Voici une liste des versions :
+
+  | Version          | Année     | Nouveautés principales                                               |
+  | ---------------- | --------- | -------------------------------------------------------------------- |
+  | **C# 1.0**       | 2002      | Bases du langage orienté objet                                       |
+  | **C# 1.2**       | 2003      | Amélioration du `foreach`                                            |
+  | **C# 2.0**       | 2005      | Generics, types `nullable`, itérateurs                               |
+  | **C# 3.0**       | 2007      | LINQ, lambdas, méthodes d’extension                                  |
+  | **C# 4.0**       | 2010      | Type `dynamic`, paramètres nommés et optionnels                      |
+  | **C# 5.0**       | 2012      | `async` / `await`, infos d’appelant                                  |
+  | **C# 6.0**       | 2015      | Interpolation de chaînes, `nameof`, null-conditional                 |
+  | **C# 7.0 – 7.3** | 2017–2018 | Tuples, pattern matching, fonctions locales, améliorations des `ref` |
+  | **C# 8.0**       | 2019      | Types de référence nullable, `switch` expressions, `async streams`   |
+  | **C# 9.0**       | 2020      | Records, `init` setters, top-level statements                        |
+  | **C# 10.0**      | 2021      | `global using`, record structs, espaces de noms simplifiés           |
+  | **C# 11.0**      | 2022      | Raw string literals, membres requis, modèles de liste                |
+  | **C# 12.0**      | 2023      | Primary constructors, inline arrays, paramètres lambda facultatifs   |
+  | **C# 13.0**      | 2024      | Améliorations `params`, `ref struct` en async, nouvelles syntaxes    |
+
+
+## Format d'un programme C#
 
 ### .NET 5
 
