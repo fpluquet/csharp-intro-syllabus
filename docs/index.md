@@ -9,6 +9,10 @@ Ce syllabus couvre les bases essentielles de la programmation avec le langage C#
 Ce site a été généré avec VitePress pour une meilleure lisibilité du contenu.
 :::
 
+## Site pour les exercices sur la théorie
+
+[https://github.com/fpluquet/csharp-intro](https://github.com/fpluquet/csharp-intro)
+
 ## Contenu du cours
 
 - [Introduction à la programmation](./0-introduction.md)
