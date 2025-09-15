@@ -34,7 +34,8 @@
       default:
           Console.WriteLine("Autre valeur");
           break;
-  }  ```
+  }  
+  ```
 
 - Ici, selon la valeur de `data`, le programme affiche un message différent.
 

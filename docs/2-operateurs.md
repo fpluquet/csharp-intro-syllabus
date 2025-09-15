@@ -353,15 +353,15 @@ En cas de doute sur la priorité des opérateurs, utilisez des parenthèses pour
 
 ## Résumé des opérateurs
 
-| Catégorie | Opérateurs | Utilisation |
-|-----------|------------|-------------|
+| Catégorie | Opérateurs                          | Utilisation |
+|-----------|-------------------------------------|-------------|
 | Arithmétiques | `+`, `-`, `*`, `/`, `%`, `++`, `--` | Calculs mathématiques |
-| Affectation | `=`, `+=`, `-=`, `*=`, `/=`, `%=` | Assigner des valeurs |
-| Relationnels | `==`, `!=`, `<`, `>`, `<=`, `>=` | Comparer des valeurs |
-| Logiques | `&&`, `||`, `!` | Combiner des conditions |
-| Bit à bit | `&`, `|`, `^`, `~`, `<<`, `>>` | Manipuler des bits |
-| Conditionnel | `?:` | Choisir entre deux valeurs selon une condition |
-| Chaînes | `+`, `==`, `!=` | Manipuler du texte |
+| Affectation | `=`, `+=`, `-=`, `*=`, `/=`, `%=`   | Assigner des valeurs |
+| Relationnels | `==`, `!=`, `<`, `>`, `<=`, `>=`    | Comparer des valeurs |
+| Logiques | `&&`, ` \|\|`, `!`                  | Combiner des conditions |
+| Bit à bit | `&`, `\|`, `^`, `~`, `<<`, `>>`     | Manipuler des bits |
+| Conditionnel | `?:`                                | Choisir entre deux valeurs selon une condition |
+| Chaînes | `+`, `==`, `!=`                     | Manipuler du texte |
 
 
 ## En résumé
