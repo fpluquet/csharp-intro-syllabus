@@ -2,230 +2,356 @@
 marp: true
 theme: default
 paginate: true
+header: 'Chapitre 6 : Tableaux et Collections'
+footer: 'Programmation C# - BA1'
 ---
 
-# Tableaux et collections
+# Chapitre 6 : Tableaux et Collections
 
----
-
-## Les tableaux
-
-- Un **tableau** est une collection d'éléments du même type. L'accès se fait par **index**.
-- **Déclaration** :
-  ```csharp
-  int[] data = new int[20];
-  string[] mois = new string[] { "janvier", "février" };
-  ```
-- **Index** : commence à 0 (`data[0]` pour le premier élément).
-- Modifier un élément par l'index : `data[1] = 25;`
+## Stocker et organiser plusieurs données
 
 ---
 
-## Les tableaux (suite)
+## Pourquoi utiliser des collections ?
 
-- **Attention** : l'index ne doit **jamais** dépasser la taille du tableau.
-- Pour la taille d'un tableau :  
-  `data.Length`
+Sans collections :
+```csharp
+double note1 = 15.5;
+double note2 = 12.0;
+double note3 = 18.5;
+// ... et ainsi de suite jusqu'à note30 !
+```
 
-**Conseil**: `var` est à éviter pour déclarer un tableau pour des raisons de clarté.
+Avec collections :
+```csharp
+double[] notes = { 15.5, 12.0, 18.5, /* ... */ };
+```
+
+**Collections = regrouper plusieurs données du même type**
 
 ---
 
-## Les tableaux à plusieurs dimensions
+## Les tableaux - Votre première collection
 
-- Un tableau à deux dimensions a un nombre fixe de lignes et de colonnes.
+### Déclaration et initialisation
 
 ```csharp
-// Tableau 2D (3 lignes x 4 colonnes)
-int[,] matrice = new int[3, 4];
-matrice[0, 0] = 1;  // Première ligne, première colonne
+// Déclaration avec taille fixe
+int[] notes = new int[5];
+
+// Initialisation directe
+int[] notes = new int[] { 15, 12, 18, 14, 16 };
+
+// Syntaxe simplifiée
+int[] notes = { 15, 12, 18, 14, 16 };
 ```
 
 ---
 
-## Les tableaux à plusieurs dimensions (suite)
+## Indexation des tableaux
 
-- Tableaux 3D ou plus:
+⚠️ **Important : les indices commencent à 0 !**
+
 ```csharp
-int[,,] cube = new int[3, 4, 5];
-cube[0, 0, 0] = 1;  // Coordonnées x=0, y=0, z=0
+int[] notes = { 15, 12, 18, 14, 16 };
+
+Console.WriteLine(notes[0]);  // 15 (premier élément)
+Console.WriteLine(notes[1]);  // 12 (deuxième élément)
+Console.WriteLine(notes[4]);  // 16 (cinquième et dernier)
+
+// notes[5] → Exception ! L'index n'existe pas
 ```
 
-- Tableaux de tableaux ("jagged array") - tailles variables:
+**Index : 0, 1, 2, 3, 4**
+**Valeurs : 15, 12, 18, 14, 16**
+
+---
+
+## Opérations de base sur les tableaux
+
 ```csharp
-int[][] irregulier = new int[3][];
-irregulier[0] = new int[4];
-irregulier[1] = new int[2];
-irregulier[2] = new int[5];
+int[] notes = { 15, 12, 18, 14, 16 };
+
+// Taille du tableau
+Console.WriteLine(notes.Length);  // 5
+
+// Parcourir avec for
+for (int i = 0; i < notes.Length; i++)
+{
+    Console.WriteLine($"Note {i}: {notes[i]}");
+}
+
+// Parcourir avec foreach
+foreach (int note in notes)
+{
+    Console.WriteLine(note);
+}
 ```
 
 ---
 
-## Les tableaux à plusieurs dimensions (suite)
+## Les listes - Collections dynamiques
 
-- Pour connaître le nombre de dimensions : `tab.Rank`
-- Pour la taille d'une dimension : `tab.GetLength(0)`
+### Pourquoi utiliser des listes ?
+
+**Tableaux** : taille fixe définie à la création
+**Listes** : taille variable, peut grandir/rétrécir
+
+```csharp
+using System.Collections.Generic;
+
+List<int> notes = new List<int>();
+// Ou avec initialisation
+List<int> notes = new List<int> { 15, 12, 18 };
+```
+
+---
+
+## Opérations sur les listes
+
+```csharp
+List<string> prenoms = new List<string>();
+
+// Ajouter des éléments
+prenoms.Add("Alice");
+prenoms.Add("Bob");
+
+// Insérer à une position
+prenoms.Insert(1, "Charlie");  // Alice, Charlie, Bob
+
+// Supprimer
+prenoms.Remove("Bob");           // Par valeur
+prenoms.RemoveAt(0);            // Par index
+
+// Vérifier l'existence
+bool existe = prenoms.Contains("Alice");
+```
+
+---
+
+## Tableaux vs Listes
+
+| Aspect | Tableaux | Listes |
+|--------|----------|--------|
+| **Taille** | Fixe | Dynamique |
+| **Performance** | Plus rapide | Légèrement plus lent |
+| **Syntaxe** | `int[]` | `List<int>` |
+| **Utilisation** | Données fixes | Données variables |
+
+**Conseil** : Utilisez les listes sauf si vous avez des contraintes de performance spécifiques.
 
 ---
 
 ## Les tuples
 
-- Un **tuple** est une collection d'éléments de différents types. Contrairement aux tableaux qui contiennent des éléments du même type, un tuple peut stocker plusieurs types. La taille du tuple est fixée à la création.
-
-**Syntaxe :**  
-```csharp
-(Type1, Type2, ...) monTuple = (valeur1, valeur2, ...);
-```
-
----
-
-## Les tuples (suite)
-
-- On peut donner des noms aux valeurs :
-  ```csharp
-  (int age, string nom) personne = (age: 30, nom: "Alice");
-  ```
-- On peut accéder par position : `personne.Item1`
-- Ou par nom : `personne.nom`
-
----
-
-## Les collections
-
-- Une **collection** est une structure de données pouvant contenir des éléments du même type.
-- Types de collections en C# :
-  - Tableaux (`[]`)
-  - Listes (`List`)
-  - Ensembles (`Set`)
-  - Maps (`HashMap`)
-  - ...
-
----
-
-## Les listes
-
-- Une **liste** en C# est une collection d'éléments du même type, dynamique (on peut ajouter ou supprimer des éléments facilement).
-- Création :
-  ```csharp
-  List<int> liste = new List<int>();
-  List<string> liste = new List<string>();
-  ```
-
----
-
-## Les listes (suite)
-
-- Les chevrons `< >` indiquent le type d'éléments.
-- Ajouter/retirer :  
-  ```csharp
-  maListe.Add(42);
-  maListe.Remove(42);
-  ```
-- Accès :  
-  `maListe[0]`  
-  Nombre d'éléments : `maListe.Count`
-
----
-
-## Parcourir une liste
-
-- Avec une boucle `for` :
-  ```csharp
-  for (int i = 0; i < maListe.Count; i++)
-  {
-      // faire qqch avec maListe[i]
-  }
-  ```
-- Avec une boucle `foreach` :
-  ```csharp
-  foreach (int item in maListe)
-  {
-      // faire qqch avec item
-  }
-  ```
-
----
-
-## Liste VS Tableau
-
-|     | Liste                       | Tableau                        |
-|-----|-----------------------------|--------------------------------|
-| 1   | taille dynamique            | taille fixe                    |
-| 2   | créé avec `List<T>`         | créé avec `T[]`                |
-| 3   | Add(), Remove(), Contains() | pas vraiment de méthodes dispo |
-| 4   | légèrement plus lent        | plus rapide (performance)      |
-| 5   | modifs fréquentes, flexible | mieux quand taille/contenu const. |
-
----
-
-## Représentation visuelle des collections
-
-### Tableau à une dimension  
+### Regrouper des types différents
 
 ```csharp
-int[] data = new int[3] { 15, 25, 35 };
-```
+// Problème : comment stocker nom ET âge ensemble ?
+string nom = "Alice";
+int age = 25;
 
-| Index | Valeur |
-|-------|--------|
-| 0     | 15     |
-| 1     | 25     |
-| 2     | 35     |
+// Solution avec tuple
+(string nom, int age) personne = ("Alice", 25);
+
+Console.WriteLine($"Nom: {personne.nom}");
+Console.WriteLine($"Âge: {personne.age}");
+```
 
 ---
 
-## Représentation visuelle des collections
+## LINQ - Manipuler les collections facilement
 
-### Tableau à deux dimensions 
+### Introduction
 
-```csharp 
-int[,] data = new int[3, 2] { { 10, 20 }, { 30, 40 }, { 50, 60 } };
-```
-
-|         | Colonne 0 | Colonne 1 |
-|---------|-----------|-----------|
-| Ligne 0 |    10     |    20     |
-| Ligne 1 |    30     |    40     |
-| Ligne 2 |    50     |    60     |
-
----
-
-## Représentation visuelle des collections
-
-### Jagged array (tableau irrégulier)
-
-```csharp 
-int[][] data = new int[3][] { 
-    new int[2] { 10, 20 }, 
-    new int[3] { 30, 40, 50 }, 
-    new int[1] { 60 } 
-}; 
-```
-
-- Un tableau principal contient 3 tableaux de tailles différentes
-- Premier tableau: 2 éléments [10, 20]
-- Deuxième tableau: 3 éléments [30, 40, 50]
-- Troisième tableau: 1 élément [60]
-
----
-
-## Représentation visuelle des collections
-
-### Liste 
+**LINQ** = Language Integrated Query
+Permet de manipuler les collections avec une syntaxe élégante
 
 ```csharp
-List<int> data = new List<int>() { 15, 25, 35 };
-```
+using System.Linq; // ← Important !
 
-- Une liste est similaire à un tableau mais peut changer de taille
-- Éléments: [15, 25, 35]
-- Peut continuer à s'agrandir avec Add() ou se réduire avec Remove()
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Méthode traditionnelle (avec boucle)
+List<int> nombresPairs = new List<int>();
+foreach (int nombre in nombres)
+{
+    if (nombre % 2 == 0)
+        nombresPairs.Add(nombre);
+}
+
+// Avec LINQ - une seule ligne !
+var nombresPairsLinq = nombres.Where(n => n % 2 == 0).ToList();
+```
 
 ---
 
-## Quelques fonctions utiles
+## Opérations LINQ essentielles
 
-- `a.CompareTo(b)` : Compare deux chaînes ou objets (renvoie 0 si égal, <0 si a < b, >0 si a > b).
-- `string[] mots = phrase.Split(' ')` : sépare une chaîne et place les éléments dans un tableau.
-- `DateTime.Now.Year` : donne l'année en cours.
-- `string.Join(",", numbers)` : crée une chaîne avec les éléments d'une liste séparés par des virgules.
+### Where() - Filtrer
+
+```csharp
+List<int> nombres = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Garder seulement les nombres pairs
+var nombresPairs = nombres.Where(n => n % 2 == 0).ToList();
+// Résultat : { 2, 4, 6, 8, 10 }
+
+// Garder les nombres > 5
+var grandsNombres = nombres.Where(n => n > 5).ToList();
+// Résultat : { 6, 7, 8, 9, 10 }
+```
+
+---
+
+## Select() - Transformer
+
+```csharp
+List<string> prenoms = { "alice", "bob", "charlie" };
+
+// Transformer en majuscules
+var majuscules = prenoms.Select(p => p.ToUpper()).ToList();
+// Résultat : { "ALICE", "BOB", "CHARLIE" }
+
+// Transformer en longueurs
+var longueurs = prenoms.Select(p => p.Length).ToList();
+// Résultat : { 5, 3, 7 }
+```
+
+---
+
+## OrderBy() - Trier
+
+```csharp
+List<int> notes = { 15, 12, 18, 14, 16 };
+
+// Tri croissant
+var notesTriees = notes.OrderBy(n => n).ToList();
+// Résultat : { 12, 14, 15, 16, 18 }
+
+// Tri décroissant
+var notesDecroissantes = notes.OrderByDescending(n => n).ToList();
+// Résultat : { 18, 16, 15, 14, 12 }
+```
+
+---
+
+## Statistiques avec LINQ
+
+```csharp
+List<int> notes = { 15, 12, 18, 14, 16 };
+
+int nombre = notes.Count();                    // 5
+int bonnesNotes = notes.Count(n => n >= 15);   // 3
+int somme = notes.Sum();                       // 75
+double moyenne = notes.Average();              // 15.0
+int maximum = notes.Max();                     // 18
+int minimum = notes.Min();                     // 12
+```
+
+---
+
+## Chaînage d'opérations LINQ
+
+```csharp
+List<string> mots = { "programmation", "csharp", "linq", "collection" };
+
+// Chaîner : filtrer → transformer → trier
+var resultat = mots
+    .Where(m => m.Length > 5)        // Mots > 5 lettres
+    .Select(m => m.ToUpper())        // En majuscules
+    .OrderBy(m => m)                 // Trier
+    .ToList();
+
+// Résultat : { "COLLECTION", "PROGRAMMATION" }
+```
+
+---
+
+## Exemple pratique : Gestion d'étudiants
+
+```csharp
+var etudiants = new List<(string nom, double moyenne)>
+{
+    ("Alice", 15.5),
+    ("Bob", 12.0),
+    ("Charlie", 17.8),
+    ("Diana", 14.2)
+};
+
+// Étudiants avec la moyenne (≥ 12)
+var reussis = etudiants
+    .Where(e => e.moyenne >= 12.0)
+    .ToList();
+
+// Noms des meilleurs étudiants (> 15)
+var meilleurs = etudiants
+    .Where(e => e.moyenne > 15.0)
+    .Select(e => e.nom)
+    .ToList();
+```
+
+---
+
+## Bonnes pratiques LINQ
+
+### 1. Utilisez ToList() ou ToArray()
+```csharp
+// ❌ La requête est réévaluée à chaque accès
+var nombresPairs = nombres.Where(n => n % 2 == 0);
+
+// ✅ La requête est évaluée une seule fois
+var nombresPairsList = nombres.Where(n => n % 2 == 0).ToList();
+```
+
+### 2. Attention aux exceptions
+```csharp
+// ❌ Exception si aucun élément trouvé
+int premier = nombres.First(n => n > 100);
+
+// ✅ Retourne 0 si aucun élément trouvé
+int premierSafe = nombres.FirstOrDefault(n => n > 100);
+```
+
+---
+
+## LINQ avec tableaux
+
+LINQ fonctionne aussi avec les tableaux :
+
+```csharp
+int[] nombres = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Carrés des nombres pairs
+var carresDesPairs = nombres
+    .Where(n => n % 2 == 0)     // { 2, 4, 6, 8, 10 }
+    .Select(n => n * n)         // { 4, 16, 36, 64, 100 }
+    .ToArray();                 // Convertir en tableau
+```
+
+---
+
+## Récapitulatif
+
+✅ **Tableaux** : taille fixe, indices 0 à Length-1
+✅ **Listes** : taille dynamique, Add/Remove
+✅ **Tuples** : regrouper différents types
+✅ **LINQ** : manipuler collections élégamment
+- `Where()` : filtrer
+- `Select()` : transformer  
+- `OrderBy()` : trier
+- `Count(), Sum(), Average()` : statistiques
+
+**N'oubliez pas** : `using System.Linq;` !
+
+---
+
+## Exercices pratiques
+
+1. **Tableau de notes** : Calculer moyenne, min, max
+2. **Liste de courses** : Ajouter/supprimer des articles
+3. **LINQ sur étudiants** : Filtrer par âge et moyenne
+4. **Analyse de ventes** : Statistiques avec LINQ
+5. **Tri de mots** : Chaîner Where/Select/OrderBy
+
+**Conseil** : Maîtrisez d'abord les bases avant LINQ !

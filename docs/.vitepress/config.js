@@ -72,16 +72,28 @@ export default withMermaid(defineConfig({
         link: '/4-structures-controle',
       },
       {
+        text: 'Méthodes des Types Natifs',
+        link: '/5-methodes-types-natifs',
+      },
+      {
         text: 'Tableaux et Collections',
-        link: '/5-tableaux-collections',
+        link: '/6-tableaux-collections',
       },
       {
         text: 'Organisation de la Mémoire',
-        link: '/6-memoire',
+        link: '/7-memoire',
       },
       {
         text: 'Fonctions',
-        link: '/7-fonctions',
+        link: '/8-fonctions',
+      },
+      {
+        text: 'Gestion des Exceptions',
+        link: '/9-gestion-exceptions',
+      },
+      {
+        text: 'Gestion des Fichiers',
+        link: '/10-gestion-fichiers',
       },
     ],
 

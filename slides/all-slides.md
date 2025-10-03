@@ -6,7 +6,7 @@ paginate: true
 
 # Programmation BA1
 ## UE1102 - Programmation (36h)
-### Année académique 2024-2025
+### Année académique 2025-2026
 
 ---
 
@@ -129,9 +129,10 @@ Le cours s'organise de façon progressive, des concepts les plus fondamentaux au
 3. Opérateurs
 4. Conversions
 5. Structures de Contrôle
-6. Organisation de la Mémoire
+6. Méthodes des Types Natifs
 7. Tableaux et Collections
-8. Fonctions
+8. Organisation de la Mémoire
+9. Fonctions
 
 Chaque chapitre s'appuie sur les connaissances des chapitres précédents, il est donc important de bien comprendre les concepts avant de passer au chapitre suivant.
 
@@ -911,7 +912,413 @@ foreach (string data in mois)
 
 ---
 
-# L'organisation de la mémoire
+# Méthodes des Types Natifs
+
+---
+
+## Plan du chapitre
+
+1. **Introduction aux méthodes**
+2. **Type `string`** - Manipulation de texte
+3. **Type `int`** - Nombres entiers
+4. **Type `double`** - Nombres décimaux
+5. **Type `bool`** - Valeurs logiques
+6. **Type `char`** - Caractères
+7. **Type `DateTime`** - Dates et heures
+
+---
+
+## Introduction
+
+### Qu'est-ce qu'une méthode de type ?
+- **Fonction** intégrée à un type de données
+- **Opération** que l'on peut effectuer sur une valeur
+- **Syntaxe** : `variable.NomMethode(paramètres)`
+
+### Exemple simple
+```csharp
+string texte = "Bonjour";
+int longueur = texte.Length;  // Propriété
+string majuscules = texte.ToUpper();  // Méthode
+```
+
+---
+
+## Type `string` - Propriétés essentielles
+
+### `Length` - Longueur de la chaîne
+```csharp
+string nom = "Alice";
+Console.WriteLine(nom.Length);  // Affiche: 5
+```
+
+### Vérification de contenu
+```csharp
+string email = "alice@example.com";
+bool contientArobase = email.Contains("@");  // True
+bool commenceParAlice = email.StartsWith("alice");  // True
+```
+
+---
+
+## Type `string` - Transformation
+
+### Changement de casse
+```csharp
+string texte = "Bonjour Monde";
+Console.WriteLine(texte.ToUpper());    // "BONJOUR MONDE"
+Console.WriteLine(texte.ToLower());    // "bonjour monde"
+```
+
+### Nettoyage
+```csharp
+string sale = "  Texte avec espaces  ";
+string propre = sale.Trim();  // "Texte avec espaces"
+```
+
+---
+
+## Type `string` - Extraction et recherche
+
+### `Substring()` - Extraire une partie
+```csharp
+string phrase = "Programmation C#";
+string debut = phrase.Substring(0, 12);  // "Programmation"
+string fin = phrase.Substring(13);       // "C#"
+```
+
+### `IndexOf()` - Trouver une position
+```csharp
+string texte = "Hello World";
+int position = texte.IndexOf("World");  // 6
+```
+
+---
+
+## Type `string` - Division et remplacement
+
+### `Split()` - Diviser en parties
+```csharp
+string fruits = "pomme,banane,orange";
+string[] tableau = fruits.Split(',');
+// tableau[0] = "pomme"
+// tableau[1] = "banane" 
+// tableau[2] = "orange"
+```
+
+### `Replace()` - Remplacer du texte
+```csharp
+string original = "Bonjour le monde";
+string nouveau = original.Replace("monde", "univers");
+// "Bonjour le univers"
+```
+
+---
+
+## Type `string` - Vérifications importantes
+
+### `IsNullOrEmpty()` - Vérifier si vide
+```csharp
+string vide = "";
+string nulle = null;
+string normale = "texte";
+
+Console.WriteLine(string.IsNullOrEmpty(vide));     // True
+Console.WriteLine(string.IsNullOrEmpty(nulle));    // True
+Console.WriteLine(string.IsNullOrEmpty(normale));  // False
+```
+
+---
+
+## Type `int` - Conversions
+
+### `ToString()` - Vers chaîne
+```csharp
+int nombre = 42;
+string texte = nombre.ToString();  // "42"
+```
+
+### `Parse()` - Depuis chaîne
+```csharp
+string chaine = "123";
+int nombre = int.Parse(chaine);  // 123
+```
+
+---
+
+## Type `int` - Conversion sécurisée
+
+### `TryParse()` - Sans exception
+```csharp
+string entree = "abc";  // Invalide
+bool succes = int.TryParse(entree, out int resultat);
+
+if (succes)
+{
+    Console.WriteLine($"Nombre: {resultat}");
+}
+else
+{
+    Console.WriteLine("Conversion impossible");
+}
+```
+
+---
+
+## Type `int` - Comparaison et limites
+
+### `CompareTo()` - Comparer
+```csharp
+int a = 42;
+int b = 30;
+int resultat = a.CompareTo(b);
+// resultat = 1 (a > b)
+// resultat = 0 (a == b)
+// resultat = -1 (a < b)
+```
+
+### Valeurs limites
+```csharp
+Console.WriteLine(int.MaxValue);  // 2,147,483,647
+Console.WriteLine(int.MinValue);  // -2,147,483,648
+```
+
+---
+
+## Type `double` - Spécificités
+
+### Formatage des décimales
+```csharp
+double pi = 3.14159;
+Console.WriteLine(pi.ToString("F2"));  // "3.14"
+Console.WriteLine(pi.ToString("F4"));  // "3.1416"
+```
+
+### Valeurs spéciales
+```csharp
+double infini = 1.0 / 0.0;
+double invalide = Math.Sqrt(-1);
+
+Console.WriteLine(double.IsInfinity(infini));  // True
+Console.WriteLine(double.IsNaN(invalide));     // True
+```
+
+---
+
+## Type `bool` - Opérations de base
+
+### Conversions
+```csharp
+bool vrai = true;
+string texte = vrai.ToString();  // "True"
+
+bool converti = bool.Parse("false");  // false
+```
+
+### Conversion sécurisée
+```csharp
+bool succes = bool.TryParse("yes", out bool resultat);
+// succes = false (seuls "true" et "false" fonctionnent)
+```
+
+---
+
+## Type `char` - Classification
+
+### Tests de caractères
+```csharp
+char c = 'A';
+Console.WriteLine(char.IsLetter(c));     // True
+Console.WriteLine(char.IsDigit(c));      // False
+Console.WriteLine(char.IsUpper(c));      // True
+Console.WriteLine(char.IsWhiteSpace(c)); // False
+```
+
+---
+
+## Type `char` - Transformation
+
+### Changement de casse
+```csharp
+char minuscule = 'a';
+char majuscule = char.ToUpper(minuscule);  // 'A'
+
+char lettre = 'B';
+char nouveauMin = char.ToLower(lettre);    // 'b'
+```
+
+### Exemple pratique
+```csharp
+string mot = "Hello123";
+int lettres = 0, chiffres = 0;
+
+foreach (char c in mot)
+{
+    if (char.IsLetter(c)) lettres++;
+    if (char.IsDigit(c)) chiffres++;
+}
+```
+
+---
+
+## Type `DateTime` - Obtenir la date/heure
+
+### Propriétés essentielles
+```csharp
+DateTime maintenant = DateTime.Now;
+DateTime aujourdhui = DateTime.Today;
+
+Console.WriteLine(maintenant.Year);   // 2025
+Console.WriteLine(maintenant.Month);  // 10
+Console.WriteLine(maintenant.Day);    // 3
+Console.WriteLine(maintenant.Hour);   // 14
+```
+
+---
+
+## Type `DateTime` - Formatage
+
+### Formats prédéfinis
+```csharp
+DateTime date = DateTime.Now;
+Console.WriteLine(date.ToString("d"));    // Date courte
+Console.WriteLine(date.ToString("t"));    // Heure courte
+Console.WriteLine(date.ToString("F"));    // Date et heure complètes
+```
+
+### Format personnalisé
+```csharp
+DateTime date = DateTime.Now;
+string format = date.ToString("dd/MM/yyyy HH:mm");
+// "03/10/2025 14:30"
+```
+
+---
+
+## Type `DateTime` - Calculs
+
+### Ajouter du temps
+```csharp
+DateTime maintenant = DateTime.Now;
+DateTime demain = maintenant.AddDays(1);
+DateTime dansUneHeure = maintenant.AddHours(1);
+DateTime lAnneeProchaine = maintenant.AddYears(1);
+```
+
+### Calculer des différences
+```csharp
+DateTime debut = new DateTime(2020, 1, 1);
+DateTime fin = DateTime.Now;
+TimeSpan duree = fin.Subtract(debut);
+Console.WriteLine($"Jours écoulés: {duree.Days}");
+```
+
+---
+
+## Exemple pratique - Validation email
+
+```csharp
+static bool EstEmailValide(string email)
+{
+    // Vérifications de base
+    if (string.IsNullOrEmpty(email))
+        return false;
+    
+    // Doit contenir exactement un @
+    int nbArobase = 0;
+    foreach (char c in email)
+    {
+        if (c == '@') nbArobase++;
+    }
+    if (nbArobase != 1) return false;
+    
+    // Doit y avoir un point après @
+    int posArobase = email.IndexOf('@');
+    string apresArobase = email.Substring(posArobase + 1);
+    return apresArobase.Contains('.');
+}
+```
+
+---
+
+## Exemple pratique - Calculateur d'âge
+
+```csharp
+static int CalculerAge(DateTime dateNaissance)
+{
+    DateTime aujourdhui = DateTime.Today;
+    int age = aujourdhui.Year - dateNaissance.Year;
+    
+    // Si l'anniversaire n'a pas encore eu lieu cette année
+    if (aujourdhui < dateNaissance.AddYears(age))
+    {
+        age--;
+    }
+    
+    return age;
+}
+
+// Utilisation
+DateTime naissance = new DateTime(1995, 6, 15);
+int age = CalculerAge(naissance);
+```
+
+---
+
+## Bonnes pratiques
+
+### 1. Toujours utiliser `TryParse` pour les conversions utilisateur
+```csharp
+// ✅ Bon
+if (int.TryParse(input, out int nombre))
+{
+    // Utiliser nombre
+}
+
+// ❌ Éviter (peut lever une exception)
+int nombre = int.Parse(input);
+```
+
+---
+
+## Bonnes pratiques (suite)
+
+### 2. Vérifier les chaînes nulles ou vides
+```csharp
+// ✅ Bon
+if (!string.IsNullOrEmpty(nom))
+{
+    Console.WriteLine(nom.ToUpper());
+}
+
+// ❌ Risqué (peut lever NullReferenceException)
+Console.WriteLine(nom.ToUpper());
+```
+
+### 3. Utiliser les méthodes appropriées pour les caractères
+```csharp
+// ✅ Bon pour analyser des caractères
+if (char.IsLetter(c)) { /* ... */ }
+
+// ❌ Moins efficace
+if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') { /* ... */ }
+```
+
+---
+
+## Récapitulatif
+
+### Les types et leurs méthodes clés
+- **`string`** : `Length`, `ToUpper()`, `Contains()`, `Split()`, `Trim()`
+- **`int`** : `ToString()`, `Parse()`, `TryParse()`, `CompareTo()`
+- **`double`** : Même que `int` + `IsNaN()`, `IsInfinity()`
+- **`bool`** : `ToString()`, `Parse()`, `TryParse()`
+- **`char`** : `IsLetter()`, `IsDigit()`, `ToUpper()`, `ToLower()`
+- **`DateTime`** : `Now`, `AddDays()`, `ToString()`, `Subtract()`
+
+---
+
+# Organisation de la Mémoire
 
 ---
 
@@ -1231,6 +1638,174 @@ List<int> data = new List<int>() { 15, 25, 35 };
 - `string[] mots = phrase.Split(' ')` : sépare une chaîne et place les éléments dans un tableau.
 - `DateTime.Now.Year` : donne l'année en cours.
 - `string.Join(",", numbers)` : crée une chaîne avec les éléments d'une liste séparés par des virgules.
+
+---
+
+## LINQ - Manipuler les collections facilement
+
+### Introduction
+
+**LINQ** = Language Integrated Query
+Permet de manipuler les collections avec une syntaxe élégante
+
+```csharp
+using System.Linq; // ← Important !
+
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Méthode traditionnelle (avec boucle)
+List<int> nombresPairs = new List<int>();
+foreach (int nombre in nombres)
+{
+    if (nombre % 2 == 0)
+        nombresPairs.Add(nombre);
+}
+
+// Avec LINQ - une seule ligne !
+var nombresPairsLinq = nombres.Where(n => n % 2 == 0).ToList();
+```
+
+---
+
+## Opérations LINQ essentielles
+
+### Where() - Filtrer
+
+```csharp
+List<int> nombres = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Garder seulement les nombres pairs
+var nombresPairs = nombres.Where(n => n % 2 == 0).ToList();
+// Résultat : { 2, 4, 6, 8, 10 }
+
+// Garder les nombres > 5
+var grandsNombres = nombres.Where(n => n > 5).ToList();
+// Résultat : { 6, 7, 8, 9, 10 }
+```
+
+---
+
+## Select() - Transformer
+
+```csharp
+List<string> prenoms = { "alice", "bob", "charlie" };
+
+// Transformer en majuscules
+var majuscules = prenoms.Select(p => p.ToUpper()).ToList();
+// Résultat : { "ALICE", "BOB", "CHARLIE" }
+
+// Transformer en longueurs
+var longueurs = prenoms.Select(p => p.Length).ToList();
+// Résultat : { 5, 3, 7 }
+```
+
+---
+
+## OrderBy() - Trier
+
+```csharp
+List<int> notes = { 15, 12, 18, 14, 16 };
+
+// Tri croissant
+var notesTriees = notes.OrderBy(n => n).ToList();
+// Résultat : { 12, 14, 15, 16, 18 }
+
+// Tri décroissant
+var notesDecroissantes = notes.OrderByDescending(n => n).ToList();
+// Résultat : { 18, 16, 15, 14, 12 }
+```
+
+---
+
+## Statistiques avec LINQ
+
+```csharp
+List<int> notes = { 15, 12, 18, 14, 16 };
+
+int nombre = notes.Count();                    // 5
+int bonnesNotes = notes.Count(n => n >= 15);   // 3
+int somme = notes.Sum();                       // 75
+double moyenne = notes.Average();              // 15.0
+int maximum = notes.Max();                     // 18
+int minimum = notes.Min();                     // 12
+```
+
+---
+
+## Chaînage d'opérations LINQ
+
+```csharp
+List<string> mots = { "programmation", "csharp", "linq", "collection" };
+
+// Chaîner : filtrer → transformer → trier
+var resultat = mots
+    .Where(m => m.Length > 5)        // Mots > 5 lettres
+    .Select(m => m.ToUpper())        // En majuscules
+    .OrderBy(m => m)                 // Trier
+    .ToList();
+
+// Résultat : { "COLLECTION", "PROGRAMMATION" }
+```
+
+---
+
+## Exemple pratique : Gestion d'étudiants
+
+```csharp
+var etudiants = new List<(string nom, double moyenne)>
+{
+    ("Alice", 15.5),
+    ("Bob", 12.0),
+    ("Charlie", 17.8),
+    ("Diana", 14.2)
+};
+
+// Étudiants avec la moyenne (≥ 12)
+var reussis = etudiants
+    .Where(e => e.moyenne >= 12.0)
+    .ToList();
+
+// Noms des meilleurs étudiants (> 15)
+var meilleurs = etudiants
+    .Where(e => e.moyenne > 15.0)
+    .Select(e => e.nom)
+    .ToList();
+```
+
+---
+
+## Bonnes pratiques LINQ
+
+### 1. Utilisez ToList() ou ToArray()
+```csharp
+// ❌ La requête est réévaluée à chaque accès
+var nombresPairs = nombres.Where(n => n % 2 == 0);
+
+// ✅ La requête est évaluée une seule fois
+var nombresPairsList = nombres.Where(n => n % 2 == 0).ToList();
+```
+
+### 2. Attention aux exceptions
+```csharp
+// ❌ Exception si aucun élément trouvé
+int premier = nombres.First(n => n > 100);
+
+// ✅ Retourne 0 si aucun élément trouvé
+int premierSafe = nombres.FirstOrDefault(n => n > 100);
+```
+
+---
+
+## LINQ : Points clés
+
+✅ **Where()** : filtrer des éléments selon une condition
+✅ **Select()** : transformer chaque élément
+✅ **OrderBy()** : trier les éléments
+✅ **Count(), Sum(), Average()** : calculs statistiques
+✅ **Chaînage** : combiner plusieurs opérations
+✅ **ToList()** : matérialiser le résultat
+
+**N'oubliez pas** : `using System.Linq;` !
 
 ---
 
@@ -1563,3 +2138,844 @@ Func<int, int, int> addition = (a, b) => a + b;
 
 Console.WriteLine(addition(5, 3));  // Affiche 8
 ```
+
+---
+
+# Gestion des Exceptions
+
+## Programmation C# - BA1
+### Chapitre 9
+
+---
+
+## Plan du chapitre
+
+1. **Introduction aux exceptions**
+2. **Types d'exceptions courantes**
+3. **Structure try-catch**
+4. **Multiples blocs catch**
+5. **Le bloc finally**
+6. **Lancer des exceptions (throw)**
+7. **Bonnes pratiques**
+8. **Exemple complet**
+
+---
+
+## Qu'est-ce qu'une exception ?
+
+> Une **exception** est un événement qui interrompt le flux normal d'exécution d'un programme
+
+### 🚗 Analogie
+- **Sans gestion** : Vous foncez dans l'obstacle
+- **Avec gestion** : Vous prenez un détour prévu
+
+### Objectifs
+- **Robustesse** : Programme continue malgré les erreurs
+- **UX** : Messages clairs au lieu de plantages
+- **Maintenance** : Code plus facile à déboguer
+
+---
+
+## Types d'exceptions courantes
+
+### 📊 Données
+- `FormatException` : Conversion impossible
+- `OverflowException` : Dépassement numérique
+- `ArgumentException` : Argument invalide
+
+### 📁 Ressources
+- `FileNotFoundException` : Fichier introuvable
+- `UnauthorizedAccessException` : Accès refusé
+
+### 🧮 Logiques
+- `DivideByZeroException` : Division par zéro
+- `IndexOutOfRangeException` : Index hors limites
+- `NullReferenceException` : Objet null
+
+---
+
+## Structure try-catch basique
+
+```csharp
+try
+{
+    // Code qui peut lever une exception
+    int resultat = int.Parse("abc");
+}
+catch (FormatException)
+{
+    // Code exécuté si FormatException
+    Console.WriteLine("Erreur : format invalide !");
+}
+```
+
+### ✅ Le programme continue au lieu de planter !
+
+---
+
+## Exemple : Division sécurisée
+
+```csharp
+try
+{
+    Console.Write("Premier nombre : ");
+    double a = double.Parse(Console.ReadLine());
+    
+    Console.Write("Second nombre : ");
+    double b = double.Parse(Console.ReadLine());
+    
+    if (b == 0)
+        throw new DivideByZeroException("Division par zéro !");
+    
+    Console.WriteLine($"Résultat : {a / b}");
+}
+catch (FormatException)
+{
+    Console.WriteLine("Erreur : nombres invalides");
+}
+catch (DivideByZeroException ex)
+{
+    Console.WriteLine($"Erreur : {ex.Message}");
+}
+```
+
+---
+
+## Multiples blocs catch
+
+### ⚠️ ORDRE IMPORTANT
+**Du plus spécifique au plus général !**
+
+```csharp
+try
+{
+    int[] nombres = { 1, 2, 3 };
+    int index = int.Parse(Console.ReadLine());
+    Console.WriteLine(nombres[index]);
+}
+catch (FormatException)           // Spécifique
+{
+    Console.WriteLine("Index doit être un nombre");
+}
+catch (IndexOutOfRangeException)  // Spécifique
+{
+    Console.WriteLine("Index hors limites");
+}
+catch (Exception ex)              // Général (toujours en dernier)
+{
+    Console.WriteLine($"Erreur : {ex.Message}");
+}
+```
+
+---
+
+## Récupérer les détails
+
+```csharp
+try
+{
+    int resultat = int.Parse("invalid");
+}
+catch (FormatException ex)
+{
+    Console.WriteLine($"Message : {ex.Message}");
+    Console.WriteLine($"Type : {ex.GetType().Name}");
+    Console.WriteLine($"Stack trace : {ex.StackTrace}");
+}
+```
+
+### Informations utiles pour le débogage ! 🐛
+
+---
+
+## Le bloc finally
+
+> **finally** s'exécute **TOUJOURS**, exception ou pas
+
+```csharp
+FileStream fichier = null;
+try
+{
+    fichier = new FileStream("data.txt", FileMode.Open);
+    // Traitement du fichier
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine("Fichier non trouvé");
+}
+finally
+{
+    // TOUJOURS exécuté
+    if (fichier != null)
+    {
+        fichier.Close();
+        Console.WriteLine("Fichier fermé proprement");
+    }
+}
+```
+
+---
+
+## Ordre d'exécution
+
+```csharp
+try
+{
+    Console.WriteLine("1. Dans try");
+    throw new Exception("Test");
+    Console.WriteLine("2. Jamais exécuté");
+}
+catch (Exception)
+{
+    Console.WriteLine("3. Dans catch");
+}
+finally
+{
+    Console.WriteLine("4. Dans finally (TOUJOURS)");
+}
+Console.WriteLine("5. Après try-catch-finally");
+```
+
+**Sortie :**
+```
+1. Dans try
+3. Dans catch
+4. Dans finally (TOUJOURS)
+5. Après try-catch-finally
+```
+
+---
+
+## Lancer des exceptions (throw)
+
+### Créer une exception
+```csharp
+static double CalculerRacine(double nombre)
+{
+    if (nombre < 0)
+    {
+        throw new ArgumentException(
+            "Impossible de calculer la racine d'un nombre négatif");
+    }
+    return Math.Sqrt(nombre);
+}
+```
+
+### Relancer une exception
+```csharp
+catch (FileNotFoundException ex)
+{
+    LogError(ex);  // Enregistrer l'erreur
+    throw;         // Relancer (préserve la stack trace)
+}
+```
+
+---
+
+## ❌ Mauvaises pratiques
+
+### 1. Ignorer les exceptions
+```csharp
+try
+{
+    int.Parse("invalid");
+}
+catch
+{
+    // Ne rien faire - DANGEREUX !
+}
+```
+
+### 2. Trop général
+```csharp
+try
+{
+    // Code complexe
+}
+catch (Exception ex)
+{
+    // Gère tout pareil
+}
+```
+
+---
+
+## ✅ Bonnes pratiques
+
+### 1. Messages informatifs
+```csharp
+// ❌ Peu utile
+throw new Exception("Erreur");
+
+// ✅ Descriptif
+throw new ArgumentException(
+    $"La valeur {valeur} n'est pas valide. Doit être entre 1 et 100.");
+```
+
+### 2. Ne pas utiliser pour le contrôle de flux
+```csharp
+// ❌ Mauvais
+try { return int.Parse(input); }
+catch { return 0; }
+
+// ✅ Bon
+if (int.TryParse(input, out int result))
+    return result;
+return 0;
+```
+
+---
+
+## Exemple complet : Calculatrice robuste
+
+```csharp
+static void Main()
+{
+    try
+    {
+        double a = LireNombre("Premier nombre : ");
+        char op = LireOperation("Opération : ");
+        double b = LireNombre("Second nombre : ");
+        
+        double resultat = Calculer(a, op, b);
+        Console.WriteLine($"{a} {op} {b} = {resultat}");
+    }
+    catch (FormatException)
+    {
+        Console.WriteLine("❌ Format invalide");
+    }
+    catch (DivideByZeroException)
+    {
+        Console.WriteLine("❌ Division par zéro");
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"❌ {ex.Message}");
+    }
+}
+```
+
+---
+
+## Exceptions personnalisées
+
+```csharp
+public class AgeInvalideException : Exception
+{
+    public int Age { get; }
+    
+    public AgeInvalideException(int age) 
+        : base($"L'âge {age} n'est pas valide (0-150)")
+    {
+        Age = age;
+    }
+}
+
+// Utilisation
+static void ValiderAge(int age)
+{
+    if (age < 0 || age > 150)
+        throw new AgeInvalideException(age);
+}
+```
+
+---
+
+## Debugging avec les exceptions
+
+### Stack trace exemple
+```
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ThrowOverflowOrFormatException(...)
+   at System.Number.ParseInt32(...)
+   at System.Int32.Parse(String s)
+   at Program.Main() in Program.cs:line 12
+```
+
+**Lecture :** L'erreur vient de la ligne 12 dans Main() → Int32.Parse → ...
+
+### 🔍 La stack trace indique exactement où l'erreur s'est produite !
+
+---
+
+## Structure complète
+
+```csharp
+try
+{
+    // Code qui peut lever une exception
+}
+catch (TypeException1 ex)
+{
+    // Gestion spécifique
+}
+catch (TypeException2)
+{
+    // Gestion sans récupération des détails
+}
+catch (Exception ex)
+{
+    // Gestion générale (toujours en dernier)
+}
+finally
+{
+    // Code de nettoyage (optionnel, toujours exécuté)
+}
+```
+
+---
+
+## Points clés à retenir
+
+### ✅ À faire
+- **try-catch** pour le code risqué
+- **Exceptions spécifiques** avant les générales  
+- **Messages informatifs** pour le débogage
+- **finally** pour le nettoyage
+- **throw** pour vos propres erreurs
+
+### ❌ À éviter
+- Ignorer les exceptions
+- Utiliser pour le contrôle de flux normal
+- Messages d'erreur vagues
+
+---
+
+## Quand utiliser les exceptions ?
+
+### ✅ Utilisez pour
+- Erreurs **exceptionnelles** (fichier manquant, réseau coupé)
+- Validation d'arguments de méthodes
+- Ressources indisponibles
+
+### ❌ N'utilisez pas pour
+- Le flux de contrôle **normal**
+- Validations d'entrée utilisateur courantes
+- Code critique en performance
+
+### 🎯 **Règle d'or :** Les exceptions sont pour les situations *exceptionnelles* !
+
+---
+
+## Récapitulatif
+
+### La gestion des exceptions rend vos programmes :
+- 🛡️ **Robustes** : Résistent aux erreurs
+- 🎯 **Professionnels** : Messages clairs
+- 🔧 **Maintenables** : Faciles à déboguer
+- 👥 **Conviviaux** : Expérience utilisateur fluide
+
+### 💡 **Prochaines étapes**
+Chapitre 10 : Gestion des fichiers (où les exceptions sont cruciales !)
+
+---
+
+## Questions ?
+
+### 🤔 Pensez aux erreurs possibles dans vos programmes
+### 🛠️ Ajoutez une gestion d'exceptions appropriée
+### 🎯 Rendez vos applications plus robustes !
+
+**Merci pour votre attention ! 👏**
+
+---
+
+# Chapitre 10 : Gestion des Fichiers
+
+## Introduction à la manipulation des fichiers en C#
+
+---
+
+## Classes principales
+
+- **`File`** : Opérations sur les fichiers
+- **`Directory`** : Opérations sur les dossiers  
+- **`Path`** : Manipulation des chemins
+- **`FileInfo`** : Informations détaillées sur un fichier
+- **`DirectoryInfo`** : Informations détaillées sur un dossier
+
+---
+
+## Lecture de fichiers
+
+### Lire toutes les lignes
+
+```csharp
+string[] lignes = File.ReadAllLines(@"C:\temp\fichier.txt");
+Console.WriteLine($"Le fichier contient {lignes.Length} lignes");
+
+foreach (string ligne in lignes)
+{
+    Console.WriteLine(ligne);
+}
+```
+
+---
+
+## Lecture ligne par ligne
+
+```csharp
+using (StreamReader lecteur = new StreamReader(cheminFichier))
+{
+    string ligne;
+    int numeroLigne = 1;
+    
+    while ((ligne = lecteur.ReadLine()) != null)
+    {
+        Console.WriteLine($"Ligne {numeroLigne}: {ligne}");
+        numeroLigne++;
+    }
+}
+```
+
+**Avantage** : Économise la mémoire pour les gros fichiers
+
+---
+
+## Écriture de fichiers
+
+### Écrire toutes les lignes
+
+```csharp
+string[] lignes = {
+    "Première ligne",
+    "Deuxième ligne",
+    "Date: " + DateTime.Now.ToString()
+};
+
+File.WriteAllLines(@"C:\temp\fichier.txt", lignes);
+```
+
+---
+
+## Ajouter du contenu
+
+```csharp
+// Ajouter une ligne
+File.AppendAllText(@"C:\temp\fichier.txt", 
+                   "\nNouvelle ligne: " + DateTime.Now);
+
+// Écrire ligne par ligne avec contrôle
+using (StreamWriter ecrivain = new StreamWriter(fichier, append: true))
+{
+    ecrivain.WriteLine("Ligne 1");
+    ecrivain.WriteLine("Ligne 2");
+}
+```
+
+---
+
+## Manipulation des chemins
+
+### Construction sécurisée avec Path
+
+```csharp
+// ✅ Correct
+string chemin = Path.Combine(@"C:\temp", "fichier.txt");
+
+// Extraire les composants
+string nomFichier = Path.GetFileName(chemin);
+string extension = Path.GetExtension(chemin);
+string dossier = Path.GetDirectoryName(chemin);
+string nomSansExt = Path.GetFileNameWithoutExtension(chemin);
+```
+
+---
+
+## Parcourir un dossier
+
+### Lister fichiers et dossiers
+
+```csharp
+string dossier = @"C:\temp";
+
+// Lister les fichiers
+string[] fichiers = Directory.GetFiles(dossier);
+foreach (string fichier in fichiers)
+{
+    Console.WriteLine($"📄 {Path.GetFileName(fichier)}");
+}
+
+// Lister les sous-dossiers
+string[] sousDossiers = Directory.GetDirectories(dossier);
+foreach (string sousDossier in sousDossiers)
+{
+    Console.WriteLine($"📁 {Path.GetFileName(sousDossier)}");
+}
+```
+
+---
+
+## Parcours récursif
+
+```csharp
+static void ParcoursRecursif(string dossier, int niveau = 0)
+{
+    string indentation = new string(' ', niveau * 2);
+    
+    // Afficher les fichiers
+    foreach (string fichier in Directory.GetFiles(dossier))
+    {
+        Console.WriteLine($"{indentation}📄 {Path.GetFileName(fichier)}");
+    }
+    
+    // Parcourir les sous-dossiers
+    foreach (string sousDossier in Directory.GetDirectories(dossier))
+    {
+        Console.WriteLine($"{indentation}📁 {Path.GetFileName(sousDossier)}/");
+        ParcoursRecursif(sousDossier, niveau + 1);
+    }
+}
+```
+
+---
+
+## Informations sur les fichiers
+
+```csharp
+FileInfo info = new FileInfo(cheminFichier);
+
+Console.WriteLine($"Nom: {info.Name}");
+Console.WriteLine($"Taille: {info.Length} octets");
+Console.WriteLine($"Créé le: {info.CreationTime}");
+Console.WriteLine($"Modifié le: {info.LastWriteTime}");
+Console.WriteLine($"Lecture seule: {info.IsReadOnly}");
+
+// Calculer l'âge
+TimeSpan age = DateTime.Now - info.LastWriteTime;
+Console.WriteLine($"Âge: {age.Days} jours");
+```
+
+---
+
+## Informations sur les dossiers
+
+```csharp
+DirectoryInfo info = new DirectoryInfo(cheminDossier);
+
+Console.WriteLine($"Nom: {info.Name}");
+Console.WriteLine($"Chemin: {info.FullName}");
+Console.WriteLine($"Parent: {info.Parent?.Name}");
+
+// Compter le contenu
+int fichiers = Directory.GetFiles(cheminDossier).Length;
+int dossiers = Directory.GetDirectories(cheminDossier).Length;
+
+Console.WriteLine($"Fichiers: {fichiers}");
+Console.WriteLine($"Dossiers: {dossiers}");
+```
+
+---
+
+## Copier et déplacer
+
+```csharp
+// Copier un fichier
+File.Copy(source, destination);
+
+// Déplacer un fichier
+File.Move(source, destination);
+
+// Créer un dossier
+Directory.CreateDirectory(cheminDossier);
+
+// Supprimer un fichier
+File.Delete(cheminFichier);
+
+// Supprimer un dossier (vide)
+Directory.Delete(cheminDossier);
+
+// Supprimer un dossier et son contenu
+Directory.Delete(cheminDossier, recursive: true);
+```
+
+---
+
+## Rechercher des fichiers
+
+```csharp
+// Recherche simple
+string[] fichiersTxt = Directory.GetFiles(@"C:\temp", "*.txt");
+
+// Recherche récursive
+string[] tousLesPdf = Directory.GetFiles(@"C:\temp", "*.pdf", 
+                                        SearchOption.AllDirectories);
+
+// Recherche avec motif
+string[] rapports = Directory.GetFiles(@"C:\temp", "rapport*");
+
+foreach (string fichier in fichiersTxt)
+{
+    Console.WriteLine(Path.GetFileName(fichier));
+}
+```
+
+---
+
+## Gestion des erreurs
+
+```csharp
+try
+{
+    string contenu = File.ReadAllText(cheminFichier);
+    Console.WriteLine(contenu);
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine("Fichier non trouvé!");
+}
+catch (UnauthorizedAccessException)
+{
+    Console.WriteLine("Accès refusé!");
+}
+catch (IOException ex)
+{
+    Console.WriteLine($"Erreur d'E/S: {ex.Message}");
+}
+```
+
+---
+
+## Bonnes pratiques
+
+### 1. Toujours vérifier l'existence
+```csharp
+if (File.Exists(cheminFichier))
+{
+    // Traiter le fichier
+}
+```
+
+### 2. Utiliser `using` pour les ressources
+```csharp
+using (StreamReader lecteur = new StreamReader(fichier))
+{
+    // Utilisation du lecteur
+} // Automatiquement fermé
+```
+
+---
+
+## Bonnes pratiques (suite)
+
+### 3. Utiliser Path.Combine
+```csharp
+// ✅ Correct
+string chemin = Path.Combine(dossier, fichier);
+
+// ❌ Éviter
+string chemin = dossier + "\\" + fichier;
+```
+
+### 4. Gérer les gros fichiers
+```csharp
+// Pour les petits fichiers
+string[] lignes = File.ReadAllLines(fichier);
+
+// Pour les gros fichiers
+using (StreamReader lecteur = new StreamReader(fichier))
+{
+    // Lecture ligne par ligne
+}
+```
+
+---
+
+## Exemple pratique : Gestionnaire de logs
+
+```csharp
+static void EcrireLog(string message)
+{
+    string fichierLog = Path.Combine(@"C:\temp", "app.log");
+    string entree = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
+    
+    File.AppendAllLines(fichierLog, new[] { entree });
+}
+
+static void LireLogs()
+{
+    string fichierLog = Path.Combine(@"C:\temp", "app.log");
+    
+    if (File.Exists(fichierLog))
+    {
+        string[] lignes = File.ReadAllLines(fichierLog);
+        foreach (string ligne in lignes)
+        {
+            Console.WriteLine(ligne);
+        }
+    }
+}
+```
+
+---
+
+## Exemple : Organisateur de fichiers
+
+```csharp
+static void OrganiserParExtension(string dossier)
+{
+    foreach (string fichier in Directory.GetFiles(dossier))
+    {
+        string extension = Path.GetExtension(fichier).ToLower();
+        
+        if (!string.IsNullOrEmpty(extension))
+        {
+            string dossierExtension = Path.Combine(dossier, 
+                                      extension.Substring(1).ToUpper());
+            
+            Directory.CreateDirectory(dossierExtension);
+            
+            string destination = Path.Combine(dossierExtension, 
+                                             Path.GetFileName(fichier));
+            File.Move(fichier, destination);
+        }
+    }
+}
+```
+
+---
+
+## Surveillance de fichiers
+
+```csharp
+FileSystemWatcher surveillant = new FileSystemWatcher();
+surveillant.Path = @"C:\temp";
+surveillant.Filter = "*.txt";
+
+surveillant.Created += (sender, e) => 
+    Console.WriteLine($"Créé: {e.Name}");
+surveillant.Changed += (sender, e) => 
+    Console.WriteLine($"Modifié: {e.Name}");
+surveillant.Deleted += (sender, e) => 
+    Console.WriteLine($"Supprimé: {e.Name}");
+
+surveillant.EnableRaisingEvents = true;
+```
+
+---
+
+## Exercices pratiques
+
+1. **Gestionnaire de journaux** : Système d'écriture/lecture de logs avec filtrage par date
+
+2. **Organisateur de fichiers** : Classer automatiquement les fichiers par extension
+
+3. **Analyseur de texte** : Compter mots, lignes, caractères dans un fichier
+
+4. **Système de sauvegarde** : Copier et archiver des fichiers avec vérification
+
+5. **Recherche de fichiers** : Outil de recherche avec filtres multiples
+
+---
+
+## Récapitulatif
+
+- **File** : Lecture/écriture de fichiers
+- **Directory** : Manipulation de dossiers
+- **Path** : Construction sécurisée de chemins
+- **FileInfo/DirectoryInfo** : Informations détaillées
+- **StreamReader/StreamWriter** : Lecture/écriture optimisée
+- **Gestion d'erreurs** : try-catch obligatoire
+- **using** : Libération automatique des ressources
+
+La gestion des fichiers est essentielle pour créer des applications robustes et utiles !

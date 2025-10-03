@@ -286,6 +286,232 @@ Console.WriteLine($"Âge: {personne2.Item2}");
 (string nom, int age, double moyenne) etudiant = ("Marie", 20, 15.5);
 ```
 
+## 6. LINQ - Manipuler les collections facilement
+
+### Introduction à LINQ
+
+**LINQ** (Language Integrated Query) est une technologie puissante qui permet de manipuler les collections avec une syntaxe similaire au SQL. Au lieu d'écrire des boucles complexes, LINQ offre des méthodes élégantes pour filtrer, trier, transformer et analyser vos données.
+
+::: info Pourquoi utiliser LINQ ?
+LINQ rend votre code plus lisible, plus concis et moins sujet aux erreurs. Une opération qui prendrait 5-10 lignes avec des boucles traditionnelles peut souvent être écrite en une seule ligne avec LINQ.
+:::
+
+### Prérequis pour utiliser LINQ
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq; // ← Important : n'oubliez pas cet using !
+```
+
+### Les opérations LINQ essentielles
+
+#### 1. Where() - Filtrer des éléments
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Méthode traditionnelle (avec boucle)
+List<int> nombresPairs = new List<int>();
+foreach (int nombre in nombres)
+{
+    if (nombre % 2 == 0)
+        nombresPairs.Add(nombre);
+}
+
+// Avec LINQ - beaucoup plus simple !
+var nombresPairsLinq = nombres.Where(n => n % 2 == 0).ToList();
+// Résultat : { 2, 4, 6, 8, 10 }
+```
+
+#### 2. Select() - Transformer des éléments
+
+```csharp
+List<string> prenoms = new List<string> { "alice", "bob", "charlie" };
+
+// Transformer en majuscules
+var prenomsEnMajuscules = prenoms.Select(p => p.ToUpper()).ToList();
+// Résultat : { "ALICE", "BOB", "CHARLIE" }
+
+// Transformer en longueurs
+var longueurs = prenoms.Select(p => p.Length).ToList();
+// Résultat : { 5, 3, 7 }
+```
+
+#### 3. OrderBy() et OrderByDescending() - Trier
+
+```csharp
+List<int> notes = new List<int> { 15, 12, 18, 14, 16 };
+
+// Tri croissant
+var notesTriees = notes.OrderBy(n => n).ToList();
+// Résultat : { 12, 14, 15, 16, 18 }
+
+// Tri décroissant
+var notesDecroissantes = notes.OrderByDescending(n => n).ToList();
+// Résultat : { 18, 16, 15, 14, 12 }
+```
+
+#### 4. First(), Last(), Single() - Récupérer des éléments spécifiques
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
+
+int premier = nombres.First();           // 1
+int dernier = nombres.Last();            // 5
+int premierPair = nombres.First(n => n % 2 == 0);  // 2
+
+// Versions "sécurisées" qui retournent null si rien n'est trouvé
+int? premierGrand = nombres.FirstOrDefault(n => n > 10);  // null
+```
+
+#### 5. Count() et Sum() - Statistiques
+
+```csharp
+List<int> notes = new List<int> { 15, 12, 18, 14, 16 };
+
+int nombreNotes = notes.Count();                    // 5
+int nombreBonnesNotes = notes.Count(n => n >= 15);  // 3
+int somme = notes.Sum();                            // 75
+double moyenne = notes.Average();                   // 15.0
+int noteMax = notes.Max();                          // 18
+int noteMin = notes.Min();                          // 12
+```
+
+### Exemples pratiques avec des données complexes
+
+#### Gestion d'une liste d'étudiants
+
+```csharp
+// Définir une structure pour un étudiant
+var etudiants = new List<(string nom, int age, double moyenne)>
+{
+    ("Alice", 20, 15.5),
+    ("Bob", 19, 12.0),
+    ("Charlie", 21, 17.8),
+    ("Diana", 20, 14.2),
+    ("Eve", 22, 16.9)
+};
+
+// Trouver tous les étudiants qui ont la moyenne
+var etudiantsAvecMoyenne = etudiants
+    .Where(e => e.moyenne >= 12.0)
+    .ToList();
+
+// Trier par note décroissante
+var etudiantsParNote = etudiants
+    .OrderByDescending(e => e.moyenne)
+    .ToList();
+
+// Récupérer seulement les noms des meilleurs étudiants (> 15)
+var nomsMeilleursEtudiants = etudiants
+    .Where(e => e.moyenne > 15.0)
+    .Select(e => e.nom)
+    .ToList();
+// Résultat : { "Alice", "Charlie", "Eve" }
+```
+
+#### Analyse de données de vente
+
+```csharp
+List<double> ventes = new List<double> { 1200.50, 850.75, 2100.00, 950.25, 1750.80 };
+
+// Statistiques en une ligne
+var statistiques = new
+{
+    Total = ventes.Sum(),
+    Moyenne = ventes.Average(),
+    Maximum = ventes.Max(),
+    Minimum = ventes.Min(),
+    NombreVentesElevees = ventes.Count(v => v > 1000)
+};
+
+Console.WriteLine($"Total: {statistiques.Total:C}");
+Console.WriteLine($"Moyenne: {statistiques.Moyenne:C}");
+Console.WriteLine($"Ventes > 1000€: {statistiques.NombreVentesElevees}");
+```
+
+### Chaînage d'opérations LINQ
+
+L'une des forces de LINQ est la possibilité de **chaîner** plusieurs opérations :
+
+```csharp
+List<string> mots = new List<string> { "programmation", "csharp", "linq", "collection", "tableau" };
+
+// Chaînage : filtrer → transformer → trier
+var resultat = mots
+    .Where(m => m.Length > 5)        // Garder les mots de plus de 5 lettres
+    .Select(m => m.ToUpper())        // Convertir en majuscules
+    .OrderBy(m => m)                 // Trier alphabétiquement
+    .ToList();
+
+// Résultat : { "COLLECTION", "PROGRAMMATION", "TABLEAU" }
+```
+
+### LINQ avec des tableaux
+
+LINQ fonctionne aussi avec les tableaux classiques :
+
+```csharp
+int[] nombres = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Trouver les nombres pairs et les mettre au carré
+var carresDesPairs = nombres
+    .Where(n => n % 2 == 0)     // { 2, 4, 6, 8, 10 }
+    .Select(n => n * n)         // { 4, 16, 36, 64, 100 }
+    .ToArray();                 // Convertir en tableau
+```
+
+### Syntaxe de requête LINQ (optionnelle)
+
+LINQ offre également une syntaxe similaire au SQL :
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Syntaxe de méthode (recommandée)
+var nombresPairs1 = nombres.Where(n => n % 2 == 0).ToList();
+
+// Syntaxe de requête (optionnelle)
+var nombresPairs2 = (from n in nombres
+                     where n % 2 == 0
+                     select n).ToList();
+
+// Les deux donnent le même résultat !
+```
+
+### Bonnes pratiques avec LINQ
+
+#### 1. Utilisez ToList() ou ToArray() quand nécessaire
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
+
+// ❌ Problématique - la requête est réévaluée à chaque accès
+var nombresPairs = nombres.Where(n => n % 2 == 0);
+
+// ✅ Mieux - la requête est évaluée une seule fois
+var nombresPairsList = nombres.Where(n => n % 2 == 0).ToList();
+```
+
+#### 2. Attention aux exceptions avec First() et Single()
+
+```csharp
+List<int> nombres = new List<int> { 1, 3, 5 };
+
+// ❌ Lève une exception si aucun élément pair
+int premierPair = nombres.First(n => n % 2 == 0);
+
+// ✅ Retourne null (ou 0 pour les int) si aucun élément trouvé
+int premierPairSafe = nombres.FirstOrDefault(n => n % 2 == 0);
+```
+
+#### 3. LINQ et performance
+
+Pour de petites collections (< 1000 éléments), LINQ est parfait. Pour de très grandes collections, considérez :
+- **PLINQ** (Parallel LINQ) pour le traitement parallèle
+- Les boucles traditionnelles si la performance est critique
+
 
 ## Résumé des points clés
 
@@ -293,8 +519,12 @@ Console.WriteLine($"Âge: {personne2.Item2}");
 ✅ **Listes** : taille dynamique, méthodes Add/Remove, plus flexibles  
 ✅ **Matrices** : tableaux 2D avec [ligne, colonne]  
 ✅ **Tuples** : regroupent différents types de données  
-✅ **Attention** : toujours vérifier les limites d'indices !
+✅ **LINQ** : manipule les collections avec des méthodes élégantes (Where, Select, OrderBy...)  
+✅ **Attention** : toujours vérifier les limites d'indices et utiliser FirstOrDefault() pour éviter les exceptions !
 
 ::: tip Conseil final
-Commencez par bien maîtriser les tableaux simples et les listes avant d'aborder les concepts plus avancés comme les matrices et les tuples.
+1. **Débutez** avec les tableaux simples et les listes
+2. **Maîtrisez** les opérations LINQ de base (Where, Select, OrderBy)
+3. **Progressez** vers les concepts avancés (matrices, tuples, chaînage LINQ)
+4. **N'oubliez pas** `using System.Linq;` pour utiliser LINQ !
 :::
