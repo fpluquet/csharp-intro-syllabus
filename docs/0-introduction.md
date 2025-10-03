@@ -115,9 +115,12 @@ flowchart TD
     B --> C[Opérateurs]
     C --> D[Conversions]
     D --> E[Structures de Contrôle]
-    E --> F[Organisation de la Mémoire]
+    E --> F[Méthodes des Types Natifs]
     F --> G[Tableaux et Collections]
-    G --> H[Fonctions]
+    G --> H[Organisation de la Mémoire]
+    H --> I[Fonctions]
+    I --> J[Gestion des Exceptions]
+    J --> K[Gestion des Fichiers]
     
 ```
 
