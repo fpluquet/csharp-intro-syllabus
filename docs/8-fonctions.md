@@ -115,119 +115,407 @@ Console.WriteLine(x);  // Affiche 6
 - Utiliser `out` sans initialiser la variable à l’appel: c’est normal, `out` promet qu’elle sera assignée dans la fonction.
 ::::
 
-### Visualisation du passage de paramètres
+### Visualisation du passage de paramètres (version haute et compacte)
 
 ```mermaid
-flowchart TD
-    subgraph "Passage_par_valeur"
-        A1[Appelant: x = 5] --> A2["Copie vers paramètre"]
-        A2 --> A3[Fonction: nombre = 5]
-        A3 --> A4[Fonction: nombre++ = 6]
-        A4 -.- A5[Appelant: x reste 5]
+%%{init: {'flowchart': {'useMaxWidth': false, 'rankSpacing': 90, 'nodeSpacing': 20}}}%%
+flowchart LR
+    subgraph Passage_par_valeur
+        direction TB
+        A1[Appelant: x = 5]
+        A2[Copie → paramètre]
+        A3[Fonction: nombre = 5]
+        A4[Fonction: nombre++ → 6]
+        A5[Appelant: x reste 5]
+        A1 --> A2 --> A3 --> A4 -.-> A5
     end
-    
-    subgraph "Passage_par_reference"
-        B1[Appelant: x = 5] --> B2["référence vers paramètre"]
-        B2 --> B3[Fonction: nombre = 5]
-        B3 --> B4[Fonction: nombre++ = 6]
-        B4 --> B5[Appelant: x devient 6]
+
+    subgraph Passage_par_reference
+        direction TB
+        B1[Appelant: x = 5]
+        B2[Référence → paramètre]
+        B3[Fonction: nombre = 5]
+        B4[Fonction: nombre++ → 6]
+        B5[Appelant: x devient 6]
+        B1 --> B2 --> B3 --> B4 --> B5
     end
-    
-    %% Styles pour meilleure lisibilité
-    classDef valeur fill:#4d94ff,stroke:#0047b3,stroke-width:2px,color:#fff,font-weight:bold
-    classDef fonction fill:#ff9980,stroke:#cc3300,stroke-width:2px,color:#fff,font-weight:bold
-    classDef resultat fill:#5cd65c,stroke:#267326,stroke-width:2px,color:#fff,font-weight:bold
-    
+
+    Passage_par_valeur --- Passage_par_reference
+
+
     class A1,A5,B1,B5 valeur
     class A3,A4,B3,B4 fonction
-    
-    linkStyle 0,1,2,4,5,6,7 stroke:#333333,stroke-width:2px
-    linkStyle 3 stroke:#333333,stroke-width:2px,stroke-dasharray: 5 5
+
+    classDef valeur fill:#4d94ff,stroke:#0047b3,stroke-width:2px,color:#fff,font-weight:bold
+    classDef fonction fill:#ff9980,stroke:#cc3300,stroke-width:2px,color:#fff,font-weight:bold
 ```
 
 ## Types valeur vs types référence
 
-Pour bien comprendre ce qui se passe « sous le capot », il faut distinguer deux familles de types. Cette distinction explique pourquoi, parfois, une modification semble « rester » après l’appel d’une fonction… et parfois pas.
+Pour bien comprendre ce qui se passe « sous le capot », il faut se rappeler qu'il faut distinguer deux familles de types. Cette distinction explique pourquoi, parfois, une modification semble « rester » après l’appel d’une fonction… et parfois pas.
 
 Les comportements du passage de paramètres varient selon qu'il s'agit de types valeur (int, bool, struct...) ou de types référence (objets, tableaux, chaînes...).
 
 ### Types valeur : passage par valeur vs référence
 
-```mermaid
-flowchart TD
-    %% Type valeur passé par valeur
-    subgraph tvv["Type valeur par valeur"]
-        A1("Appelant: int x = 5")
-        A2["Fonction: int nombre = 5 (copie)"]
-        A1 --> A2
-        A2 --> A3["Fonction: nombre devient 6"]
-        A3 -.- A1
-    end
+Les **types valeur** (int, bool, char, double, struct...) stockent directement leur contenu dans la variable. Imaginez-les comme des boîtes qui contiennent réellement la valeur.
 
-    %% Type valeur passé par référence
-    subgraph tvr["Type valeur par référence"]
-        B1["Appelant: int y = 5"]
-        B2["Fonction: ref int nombre = 5"]
-        B1 <--> B2
-        B2 --> B3["Fonction: nombre devient 6"]
-        B3 --> B1
-    end
+#### Passage par valeur (comportement par défaut)
 
-    %% Styles pour meilleure lisibilité
-    classDef stack fill:#f0f0f0,stroke:#2B6087,stroke-width:1px
-    classDef section fill:#E1F5FE,stroke:#2B6087,stroke-width:1px
-    classDef variable fill:#4d94ff,stroke:#0047b3,stroke-width:2px,color:#fff,font-weight:bold
+Quand on passe un type valeur à une fonction, C# fait une **photocopie** de la valeur :
 
-    class A1,A2,A3,B1,B2,B3 variable
+```csharp
+void TesterPassageValeur(int nombre)
+{
+    Console.WriteLine($"Reçu : {nombre}");
+    nombre = 100;  // On modifie la copie
+    Console.WriteLine($"Modifié dans fonction : {nombre}");
+}
 
-    %% Style des flèches
-    linkStyle 0,1,3,4,5 stroke:#333333,stroke-width:2px
-    linkStyle 2 stroke:#333333,stroke-width:2px,stroke-dasharray: 5 5
+int monNombre = 42;
+Console.WriteLine($"Avant appel : {monNombre}");
+TesterPassageValeur(monNombre);
+Console.WriteLine($"Après appel : {monNombre}");  // Toujours 42 !
 ```
+
+**Résultat :**
+```
+Avant appel : 42
+Reçu : 42
+Modifié dans fonction : 100
+Après appel : 42
+```
+
+**Pourquoi ?** La fonction a reçu une copie de `monNombre`. Modifier cette copie ne change pas l'original.
+
+#### Passage par référence (avec `ref` ou `out`)
+
+Avec `ref`, on donne l'**adresse** de la boîte originale à la fonction :
+
+```csharp
+void TesterPassageReference(ref int nombre)
+{
+    Console.WriteLine($"Reçu : {nombre}");
+    nombre = 100;  // On modifie l'original !
+    Console.WriteLine($"Modifié dans fonction : {nombre}");
+}
+
+int monNombre = 42;
+Console.WriteLine($"Avant appel : {monNombre}");
+TesterPassageReference(ref monNombre);  // N'oubliez pas 'ref' !
+Console.WriteLine($"Après appel : {monNombre}");  // Maintenant 100 !
+```
+
+**Résultat :**
+```
+Avant appel : 42
+Reçu : 42
+Modifié dans fonction : 100
+Après appel : 100
+```
+
+**Métaphore :** C'est comme donner les clés de votre maison vs donner une photo de votre maison. Avec les clés (`ref`), la personne peut changer votre décoration !
 
 ### Types référence : passage par valeur vs référence
 
+Les **types référence** (tableaux, objets, listes, strings...) fonctionnent différemment. La variable ne contient pas l'objet lui-même, mais une **adresse** vers l'endroit où l'objet est stocké en mémoire.
+
+Imaginez un type référence comme un **marque-page** dans un livre :
+- Le marque-page (la variable) indique une page
+- Le contenu de la page (l'objet) existe quelque part dans le livre (la mémoire)
+
 ```mermaid
 flowchart LR
-    subgraph "Stack"
-        subgraph "Type référence par valeur"
-            A1["int[] arr = [1,2,3]"]
-            A2["int[] param (copie de référence)"]
-        end
-        
-        subgraph "Type référence par reference"
-            B1["int[] arr = [1,2,3]"]
-            B2["ref int[] param (même référence)"]
-        end
+    subgraph Stack["Stack (Variables)"]
+        V1["monTableau<br/>adresse: 0x1000"]
     end
     
-    subgraph "Heap"
-        C1["[1,2,3]"] 
-        C2["[1,2,3 devient 1,2,9]"]
+    subgraph Heap["Heap (Objets)"]
+        O1["0x1000<br/>[1, 2, 3]"]
     end
     
-    %% Connexions90
-    A1 --> C1
-    A2 --> C1
-    A2 --> C2
+    V1 --> O1
     
-    B1 <--> B2
-    B1 --> C1
-    B2 --> C2
-    
-    %% Styles pour meilleure lisibilité
-    classDef stack fill:#f0f0f0,stroke:#2B6087,stroke-width:1px
-    classDef section fill:#E1F5FE,stroke:#2B6087,stroke-width:1px
-    classDef heap fill:#fff0f0,stroke:#CC3300,stroke-width:1px
-    classDef stackVar fill:#4d94ff,stroke:#0047b3,stroke-width:2px,color:#fff,font-weight:bold
-    classDef heapVar fill:#ff9980,stroke:#cc3300,stroke-width:2px,color:#fff,font-weight:bold
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
     
     class Stack stack
     class Heap heap
-    class Type_reference_par_valeur,Type_reference_par_reference section
-    class A1,A2,B1,B2 stackVar
-    class C1,C2 heapVar
+    class V1 var
+    class O1 obj
 ```
+
+#### Passage par valeur (comportement par défaut)
+
+Même "par valeur", on peut modifier le contenu de l'objet :
+
+```csharp
+void ModifierContenu(int[] tableau)
+{
+    Console.WriteLine($"Tableau reçu : [{string.Join(", ", tableau)}]");
+    tableau[0] = 999;  // On modifie le contenu à travers la référence
+    Console.WriteLine($"Tableau modifié : [{string.Join(", ", tableau)}]");
+}
+
+int[] monTableau = {1, 2, 3};
+Console.WriteLine($"Avant appel : [{string.Join(", ", monTableau)}]");
+ModifierContenu(monTableau);
+Console.WriteLine($"Après appel : [{string.Join(", ", monTableau)}]");
+```
+
+**Résultat :**
+```
+Avant appel : [1, 2, 3]
+Tableau reçu : [1, 2, 3]
+Tableau modifié : [999, 2, 3]
+Après appel : [999, 2, 3]
+```
+
+**Visualisation en mémoire :**
+
+```mermaid
+flowchart TB
+    subgraph Avant["🔸 AVANT L'APPEL"]
+        direction LR
+        subgraph Stack1["Stack (Variables)"]
+            V1["monTableau<br/>📍 0x1000"]
+        end
+        subgraph Heap1["Heap (Objets)"]
+            O1["0x1000<br/>[1, 2, 3]"]
+        end
+        V1 --> O1
+    end
+    
+    subgraph Pendant["🔸 PENDANT L'APPEL ModifierContenu(monTableau)"]
+        direction LR
+        subgraph Stack2["Stack (Variables)"]
+            V2["monTableau<br/>📍 0x1000"]
+            V3["tableau (param)<br/>📍 0x1000<br/>📋 copie de l'adresse"]
+        end
+        subgraph Heap2["Heap (Objets)"]
+            O2["0x1000<br/>[999, 2, 3]<br/>⚠️ Modifié !"]
+        end
+        V2 --> O2
+        V3 --> O2
+    end
+    
+    subgraph Apres["🔸 APRÈS L'APPEL"]
+        direction LR
+        subgraph Stack3["Stack (Variables)"]
+            V4["monTableau<br/>📍 0x1000"]
+        end
+        subgraph Heap3["Heap (Objets)"]
+            O3["0x1000<br/>[999, 2, 3]<br/>✅ Changement permanent"]
+        end
+        V4 --> O3
+    end
+    
+    Avant ==> Pendant
+    Pendant ==> Apres
+    
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
+    classDef modified fill:#ff6b6b,stroke:#d63031,stroke-width:2px,color:#fff
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class Stack1,Stack2,Stack3 stack
+    class Heap1,Heap2,Heap3 heap
+    class V1,V2,V3,V4 var
+    class O1,O3 obj
+    class O2 modified
+    class Avant,Pendant,Apres phase
+```
+
+**Pourquoi ça marche ?** La fonction reçoit une copie de l'adresse, mais les deux variables pointent vers le même objet en mémoire ! Modifier l'objet via une des deux adresses affecte ce que voient les deux variables.
+
+**Mais attention :** on ne peut pas modifier l'adresse elle-même :
+
+```csharp
+void TenterChangerReference(int[] tableau)
+{
+    tableau = new int[] {10, 20, 30};  // Nouvelle adresse locale uniquement
+    Console.WriteLine($"Nouveau tableau dans fonction : [{string.Join(", ", tableau)}]");
+}
+
+int[] monTableau = {1, 2, 3};
+Console.WriteLine($"Avant appel : [{string.Join(", ", monTableau)}]");
+TenterChangerReference(monTableau);
+Console.WriteLine($"Après appel : [{string.Join(", ", monTableau)}]");  // Inchangé !
+```
+
+**Résultat :**
+```
+Avant appel : [1, 2, 3]
+Nouveau tableau dans fonction : [10, 20, 30]
+Après appel : [1, 2, 3]
+```
+
+**Visualisation en mémoire :**
+
+```mermaid
+flowchart TB
+    subgraph Avant["🔸 AVANT L'APPEL"]
+        direction LR
+        subgraph Stack1["Stack (Variables)"]
+            V1["monTableau<br/>📍 0x1000"]
+        end
+        subgraph Heap1["Heap (Objets)"]
+            O1["0x1000<br/>[1, 2, 3]"]
+        end
+        V1 --> O1
+    end
+    
+    subgraph Pendant["🔸 PENDANT TenterChangerReference(monTableau)"]
+        direction LR
+        subgraph Stack2["Stack (Variables)"]
+            V2["monTableau<br/>📍 0x1000<br/>🔒 Inchangé"]
+            V3["tableau (param)<br/>📍 0x2000<br/>⚠️ Nouvelle adresse locale"]
+        end
+        subgraph Heap2["Heap (Objets)"]
+            O2["0x1000<br/>[1, 2, 3]<br/>📍 Objet original"]
+            O3["0x2000<br/>[10, 20, 30]<br/>🆕 Nouvel objet"]
+        end
+        V2 --> O2
+        V3 --> O3
+    end
+    
+    subgraph Apres["🔸 APRÈS L'APPEL"]
+        direction LR
+        subgraph Stack3["Stack (Variables)"]
+            V4["monTableau<br/>📍 0x1000<br/>✅ Toujours la même adresse"]
+        end
+        subgraph Heap3["Heap (Objets)"]
+            O4["0x1000<br/>[1, 2, 3]<br/>✅ Objet inchangé"]
+            O5["❌ Objet [10,20,30]<br/>🗑️ supprimé (hors portée)"]
+        end
+        V4 --> O4
+    end
+    
+    Avant ==> Pendant
+    Pendant ==> Apres
+    
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
+    classDef varChanged fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
+    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff
+    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class Stack1,Stack2,Stack3 stack
+    class Heap1,Heap2,Heap3 heap
+    class V1,V2,V4 var
+    class V3 varChanged
+    class O1,O2,O4 obj
+    class O3 objNew
+    class O5 objDeleted
+    class Avant,Pendant,Apres phase
+```
+
+**Explication :** Dans la fonction, `tableau` reçoit une copie de l'adresse vers `{1, 2, 3}`. Quand on fait `tableau = new int[] {10, 20, 30}`, on change seulement la variable locale `tableau` pour qu'elle pointe vers un nouveau tableau. La variable `monTableau` dans le programme principal garde son adresse originale.
+
+#### Passage par référence (avec `ref`)
+
+Avec `ref`, on peut modifier la variable qui contient l'adresse :
+
+```csharp
+void ChangerReference(ref int[] tableau)
+{
+    tableau = new int[] {10, 20, 30};  // On change la variable originale
+    Console.WriteLine($"Nouveau tableau : [{string.Join(", ", tableau)}]");
+}
+
+int[] monTableau = {1, 2, 3};
+Console.WriteLine($"Avant appel : [{string.Join(", ", monTableau)}]");
+ChangerReference(ref monTableau);
+Console.WriteLine($"Après appel : [{string.Join(", ", monTableau)}]");
+```
+
+**Résultat :**
+```
+Avant appel : [1, 2, 3]
+Nouveau tableau : [10, 20, 30]
+Après appel : [10, 20, 30]
+```
+
+**Visualisation en mémoire :**
+
+```mermaid
+flowchart TB
+    subgraph Avant["🔸 AVANT L'APPEL"]
+        direction LR
+        subgraph Stack1["Stack (Variables)"]
+            V1["monTableau<br/>📍 0x1000"]
+        end
+        subgraph Heap1["Heap (Objets)"]
+            O1["0x1000<br/>[1, 2, 3]"]
+        end
+        V1 --> O1
+    end
+    
+    subgraph Pendant["🔸 PENDANT ChangerReference(ref monTableau)"]
+        direction LR
+        subgraph Stack2["Stack (Variables)"]
+            V2["monTableau<br/>📍 0x2000<br/>🔄 Modifié directement"]
+            V3["tableau (ref)<br/>🔗 Alias de monTableau"]
+        end
+        subgraph Heap2["Heap (Objets)"]
+            O2["0x1000<br/>[1, 2, 3]<br/>📍 Ancien objet"]
+            O3["0x2000<br/>[10, 20, 30]<br/>🆕 Nouvel objet"]
+        end
+        V2 --> O3
+        V3 -.-> V2
+    end
+    
+    subgraph Apres["🔸 APRÈS L'APPEL"]
+        direction LR
+        subgraph Stack3["Stack (Variables)"]
+            V4["monTableau<br/>📍 0x2000<br/>✅ Nouvelle adresse permanente"]
+        end
+        subgraph Heap3["Heap (Objets)"]
+            O4["❌ Ancien objet [1,2,3]<br/>🗑️ supprimé (plus de référence)"]
+            O5["0x2000<br/>[10, 20, 30]<br/>✅ Nouvel objet actif"]
+        end
+        V4 --> O5
+    end
+    
+    Avant ==> Pendant
+    Pendant ==> Apres
+    
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
+    classDef varRef fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff
+    classDef varChanged fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
+    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff
+    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class Stack1,Stack2,Stack3 stack
+    class Heap1,Heap2,Heap3 heap
+    class V1 var
+    class V2,V4 varChanged
+    class V3 varRef
+    class O1,O2 obj
+    class O3,O5 objNew
+    class O4 objDeleted
+    class Avant,Pendant,Apres phase
+```
+
+**Explication :** Avec `ref`, la fonction reçoit un accès direct à la variable `monTableau` elle-même. Elle peut donc changer ce vers quoi pointe cette variable. Le paramètre `tableau` n'est pas une copie, mais un **alias** de `monTableau`.
+
+**Résumé des comportements :**
+- **Types valeur par valeur** : copie de la valeur → modifications locales seulement
+- **Types valeur par référence** : accès direct à la variable → modifications permanentes
+- **Types référence par valeur** : copie de l'adresse → peut modifier l'objet, pas la variable
+- **Types référence par référence** : accès direct à la variable ET à l'objet → contrôle total
+
 
 ### Exemple concret avec tableau
 
