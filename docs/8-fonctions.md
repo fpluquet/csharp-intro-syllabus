@@ -69,12 +69,18 @@ Console.WriteLine(total);  // Affiche 8
 ## Le passage de paramètres
 
 Quand on appelle une fonction, on lui « apporte » des informations: ce sont les paramètres. Deux manières principales existent pour les transmettre, et elles ne racontent pas la même histoire.
+
+### Comportement par défaut : passage par valeur
+
+En C#, **le passage par valeur est le comportement par défaut**. Cela signifie que :
 - Par valeur: on donne une copie. La fonction travaille sur son exemplaire à elle.
-- Par référence: on donne un lien vers l’original. La fonction peut alors modifier la chose d’origine.
+- Par référence: on donne un lien vers l'original. La fonction peut alors modifier la chose d'origine.
+
+Pour forcer un passage par référence, il faut explicitement utiliser les mots-clés `ref` ou `out`.
 
 Métaphore: prêter un livre
-- Par valeur, c’est comme donner une photocopie: si l’autre surligne, votre livre reste intact.
-- Par référence, c’est prêter votre vrai livre: s’il est annoté, votre exemplaire change.
+- Par valeur (défaut), c'est comme donner une photocopie: si l'autre surligne, votre livre reste intact.
+- Par référence (avec `ref` ou `out`), c'est prêter votre vrai livre: s'il est annoté, votre exemplaire change.
 
 ### Par valeur
 
@@ -95,6 +101,18 @@ Console.WriteLine("Après appel : " + x);  // Affiche toujours 5
 ### Par référence
 
 La variable locale et le paramètre partagent la même instance. On utilise `ref` ou `out`.
+
+#### Différence entre ref et out
+
+**`ref` (référence)** :
+- La variable **doit être initialisée** avant l'appel de la fonction
+- La fonction peut lire ET modifier la valeur
+- Utilisé quand on veut modifier une variable existante
+
+**`out` (sortie)** :
+- La variable **peut ne pas être initialisée** avant l'appel
+- La fonction **doit obligatoirement** assigner une valeur au paramètre
+- Utilisé quand la fonction doit "retourner" plusieurs valeurs
 
 #### Avec ref
 
@@ -647,17 +665,44 @@ Console.WriteLine($"Moyenne: {moy}, Écart-type: {ecart}");
 ```csharp
 void ObtenirDonnees(out int valeur)
 {
-    valeur = 42;  // Doit assigner une valeur
+    valeur = 42;  // Doit obligatoirement assigner une valeur
 }
 
-int resultat;
+int resultat;  // Pas besoin d'initialiser avec out
 ObtenirDonnees(out resultat);
 Console.WriteLine(resultat);  // Affiche 42
 ```
 
+#### Exemple comparatif ref vs out
+
+```csharp
+// Avec ref : variable doit être initialisée
+void DoublerAvecRef(ref int nombre)
+{
+    Console.WriteLine($"Valeur reçue : {nombre}");  // Peut lire la valeur
+    nombre = nombre * 2;  // Modifie la valeur
+}
+
+// Avec out : variable sera initialisée dans la fonction
+void CreerNombreAvecOut(out int nombre)
+{
+    // Console.WriteLine(nombre);  // ERREUR! Ne peut pas lire avant d'assigner
+    nombre = 100;  // Doit obligatoirement assigner
+}
+
+// Utilisation
+int x = 5;  // Doit être initialisé pour ref
+DoublerAvecRef(ref x);
+Console.WriteLine(x);  // Affiche 10
+
+int y;  // Pas besoin d'initialiser pour out
+CreerNombreAvecOut(out y);
+Console.WriteLine(y);  // Affiche 100
+```
+
 ::: warning Différence entre ref et out
-- `ref` : la variable doit être initialisée avant l'appel
-- `out` : la variable peut ne pas être initialisée, mais doit recevoir une valeur dans la fonction
+- `ref` : la variable **doit être initialisée** avant l'appel et peut être lue dans la fonction
+- `out` : la variable **peut ne pas être initialisée** avant l'appel, mais **doit obligatoirement** recevoir une valeur dans la fonction
 :::
 
 ## Paramètres optionnels
@@ -680,6 +725,84 @@ Utilisation :
 ```csharp
 Message("Hello");  // Paramètre optionnel non fourni
 Message("Hello", true);  // Paramètre optionnel fourni
+```
+
+## Paramètres nommés
+
+Les **paramètres nommés** permettent de spécifier explicitement le nom du paramètre lors de l'appel d'une fonction. Cela améliore la lisibilité du code et permet de passer les paramètres dans n'importe quel ordre.
+
+### Syntaxe
+
+```csharp
+void CreerPersonne(string nom, string prenom, int age, string ville = "Inconnue")
+{
+    Console.WriteLine($"{prenom} {nom}, {age} ans, habite à {ville}");
+}
+```
+
+### Appel avec paramètres nommés
+
+```csharp
+// Appel classique (ordre des paramètres important)
+CreerPersonne("Dupont", "Jean", 25, "Bruxelles");
+
+// Appel avec paramètres nommés (ordre libre)
+CreerPersonne(age: 25, nom: "Dupont", prenom: "Jean", ville: "Bruxelles");
+
+// Mélange paramètres positionnels et nommés
+CreerPersonne("Dupont", "Jean", age: 25, ville: "Bruxelles");
+
+// Avec paramètre optionnel omis
+CreerPersonne(nom: "Martin", prenom: "Marie", age: 30);
+```
+
+### Avantages des paramètres nommés
+
+1. **Clarté du code** : le nom du paramètre indique explicitement ce que représente la valeur
+   ```csharp
+   // Peu clair
+   CalculerPrix(100, 0.21, true, false);
+   
+   // Beaucoup plus clair
+   CalculerPrix(montant: 100, tva: 0.21, inclureTva: true, appliquerRemise: false);
+   ```
+
+2. **Ordre flexible** : possibilité de passer les paramètres dans n'importe quel ordre
+   ```csharp
+   void ConfigurerServeur(string host, int port, bool ssl, string database)
+   {
+       // Configuration du serveur
+   }
+   
+   // Ordre des paramètres libre avec noms
+   ConfigurerServeur(ssl: true, database: "mydb", host: "localhost", port: 8080);
+   ```
+
+3. **Sécurité** : évite les erreurs dues à l'inversion de paramètres de même type
+   ```csharp
+   void DeplacerPoint(int x, int y)
+   {
+       Console.WriteLine($"Déplacement vers ({x}, {y})");
+   }
+   
+   // Risque d'erreur
+   DeplacerPoint(5, 10);  // x=5, y=10 ou x=10, y=5 ?
+   
+   // Pas d'ambiguïté
+   DeplacerPoint(x: 5, y: 10);  // Clairement x=5, y=10
+   ```
+
+### Règles importantes
+
+- Les paramètres positionnels doivent venir **avant** les paramètres nommés
+- Une fois qu'un paramètre nommé est utilisé, tous les suivants doivent aussi être nommés
+
+```csharp
+// ✅ Correct
+MaFonction(param1, param2, nom3: valeur3, nom4: valeur4);
+
+// ❌ Incorrect - paramètre positionnel après un paramètre nommé
+MaFonction(param1, nom2: valeur2, param3, nom4: valeur4);
 ```
 
 ## Surcharge de fonction
@@ -735,12 +858,16 @@ Console.WriteLine(addition(5, 3));  // Affiche 8
 ## En résumé
 
 - Une fonction est une pièce de code qui porte un nom, peut recevoir des paramètres et, parfois, rend une valeur avec `return`.
-- Passer « par valeur », c’est donner une copie; passer « par référence », c’est prêter l’original.
-- Les types valeur (int, bool, struct) se comportent différemment des types référence (tableaux, objets): gardez cette différence à l’esprit.
-- `ref` et `out` permettent à une fonction d’influencer des variables définies à l’extérieur: `ref` nécessite une variable initialisée; `out` promet de l’initialiser.
+- **Le passage par valeur est le comportement par défaut** en C# : la fonction reçoit une copie des paramètres.
+- Pour un passage par référence, il faut explicitement utiliser `ref` ou `out` :
+  - `ref` : la variable doit être initialisée avant l'appel, la fonction peut la lire et la modifier
+  - `out` : la variable peut ne pas être initialisée, mais la fonction doit obligatoirement lui assigner une valeur
+- Les **paramètres nommés** permettent d'appeler une fonction en spécifiant explicitement le nom des paramètres (ex: `f(a: 5, b: 10)`), améliorant la lisibilité et permettant un ordre flexible.
+- Les types valeur (int, bool, struct) se comportent différemment des types référence (tableaux, objets): gardez cette différence à l'esprit.
 
-Petite checklist avant d’écrire une fonction
+Petite checklist avant d'écrire une fonction
 - Ai-je un nom clair qui dit ce que la fonction fait ?
 - Quels paramètres sont vraiment nécessaires et de quel type ?
 - La fonction doit-elle renvoyer une valeur ? Laquelle ?
+- Ai-je besoin d'un passage par référence (`ref`/`out`) ou le passage par valeur (défaut) suffit-il ?
 - Y a-t-il des effets de bord attendus (modifications d’objets) ? Sont-ils souhaitables et documentés ?
