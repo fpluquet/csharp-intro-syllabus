@@ -276,6 +276,7 @@ Après appel : [999, 2, 3]
 **Visualisation en mémoire :**
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'nodeSpacing': 50, 'rankSpacing': 80, 'subgraphTextSize': '14px' }, 'flowchart': { 'useMaxWidth': true, 'htmlLabels': true, 'curve': 'linear', 'subgraphTitleMargin': {'top': 5, 'bottom': 5}, 'width': 1000 }}}%%
 flowchart TB
     subgraph Avant["🔸 AVANT L'APPEL"]
         direction LR
@@ -288,7 +289,7 @@ flowchart TB
         V1 --> O1
     end
     
-    subgraph Pendant["🔸 PENDANT L'APPEL ModifierContenu(monTableau)"]
+    subgraph Pendant["🔸 PENDANT L'APPEL"]
         direction LR
         subgraph Stack2["Stack (Variables)"]
             V2["monTableau<br/>📍 0x1000"]
@@ -315,12 +316,12 @@ flowchart TB
     Avant ==> Pendant
     Pendant ==> Apres
     
-    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
-    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
-    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
-    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
-    classDef modified fill:#ff6b6b,stroke:#d63031,stroke-width:2px,color:#fff
-    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,font-size:14px,color:#000
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,font-size:14px,color:#000
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef modified fill:#ff6b6b,stroke:#d63031,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,font-size:16px,color:#000
     
     class Stack1,Stack2,Stack3 stack
     class Heap1,Heap2,Heap3 heap
@@ -356,7 +357,12 @@ Après appel : [1, 2, 3]
 
 **Visualisation en mémoire :**
 
+
+
+
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'nodeSpacing': 50, 'rankSpacing': 80, 'subgraphTextSize': '18px' }, 'flowchart': { 'useMaxWidth': true, 'htmlLabels': true, 'curve': 'linear' }}}%%
+
 flowchart TB
     subgraph Avant["🔸 AVANT L'APPEL"]
         direction LR
@@ -369,7 +375,7 @@ flowchart TB
         V1 --> O1
     end
     
-    subgraph Pendant["🔸 PENDANT TenterChangerReference(monTableau)"]
+    subgraph Pendant["🔸 PENDANT L'APPEL"]
         direction LR
         subgraph Stack2["Stack (Variables)"]
             V2["monTableau<br/>📍 0x1000<br/>🔒 Inchangé"]
@@ -398,14 +404,14 @@ flowchart TB
     Avant ==> Pendant
     Pendant ==> Apres
     
-    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
-    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
-    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
-    classDef varChanged fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff
-    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
-    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff
-    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5
-    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,font-size:14px,color:#000
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,font-size:14px,color:#000
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef varChanged fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5,font-size:13px,padding:8px
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,font-size:16px,color:#000
     
     class Stack1,Stack2,Stack3 stack
     class Heap1,Heap2,Heap3 heap
@@ -446,6 +452,7 @@ Après appel : [10, 20, 30]
 **Visualisation en mémoire :**
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000', 'nodeSpacing': 50, 'rankSpacing': 80, 'subgraphTextSize': '18px' }, 'flowchart': { 'useMaxWidth': true, 'htmlLabels': true, 'curve': 'linear' }}}%%
 flowchart TB
     subgraph Avant["🔸 AVANT L'APPEL"]
         direction LR
@@ -487,15 +494,15 @@ flowchart TB
     Avant ==> Pendant
     Pendant ==> Apres
     
-    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
-    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
-    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
-    classDef varRef fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff
-    classDef varChanged fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff
-    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
-    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff
-    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5
-    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,font-size:14px,color:#000
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,font-size:14px,color:#000
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef varRef fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef varChanged fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,font-size:13px,padding:8px
+    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff,font-size:13px,padding:8px
+    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5,font-size:13px,padding:8px
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,font-size:16px,color:#000
     
     class Stack1,Stack2,Stack3 stack
     class Heap1,Heap2,Heap3 heap
