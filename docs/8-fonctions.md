@@ -317,10 +317,10 @@ flowchart LR
     
     V1 --> O1
     
-    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px
-    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px
-    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff
-    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,white-space:nowrap
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,white-space:nowrap
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,white-space:nowrap
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,white-space:nowrap
     
     class Stack stack
     class Heap heap
@@ -546,7 +546,7 @@ flowchart TB
         V1 --> O1
     end
     
-    subgraph Pendant["🔸 PENDANT ChangerReference(ref monTableau)"]
+    subgraph Pendant["🔸 PENDANT L'APPEL"]
         direction LR
         subgraph Stack2["Stack (Variables)"]
             V2["monTableau<br/>📍 0x2000<br/>🔄 Modifié directement"]
@@ -575,15 +575,15 @@ flowchart TB
     Avant ==> Pendant
     Pendant ==> Apres
     
-    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,font-size:14px,color:#000
-    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,font-size:14px,color:#000
-    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,font-size:13px,padding:8px
-    classDef varRef fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff,font-size:13px,padding:8px
-    classDef varChanged fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff,font-size:13px,padding:8px
-    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,font-size:13px,padding:8px
-    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff,font-size:13px,padding:8px
-    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5,font-size:13px,padding:8px
-    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,font-size:16px,color:#000
+    classDef stack fill:#e1f5fe,stroke:#2B6087,stroke-width:2px,font-size:14px,color:#000,white-space:nowrap
+    classDef heap fill:#ffebe6,stroke:#CC3300,stroke-width:2px,font-size:14px,color:#000,white-space:nowrap
+    classDef var fill:#4d94ff,stroke:#0047b3,stroke-width:1px,color:#fff,font-size:13px,padding:8px,white-space:nowrap
+    classDef varRef fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff,font-size:13px,padding:8px,white-space:nowrap
+    classDef varChanged fill:#ff9800,stroke:#f57c00,stroke-width:2px,color:#fff,font-size:13px,padding:8px,white-space:nowrap
+    classDef obj fill:#ff9980,stroke:#cc3300,stroke-width:1px,color:#fff,font-size:13px,padding:8px,white-space:nowrap
+    classDef objNew fill:#66bb6a,stroke:#2e7d32,stroke-width:2px,color:#fff,font-size:13px,padding:8px,white-space:nowrap
+    classDef objDeleted fill:#bdbdbd,stroke:#616161,stroke-width:1px,color:#333,stroke-dasharray: 5 5,font-size:13px,padding:8px,white-space:nowrap
+    classDef phase fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,font-size:16px,color:#000,white-space:nowrap
     
     class Stack1,Stack2,Stack3 stack
     class Heap1,Heap2,Heap3 heap
@@ -888,20 +888,483 @@ Le compilateur choisit automatiquement la bonne fonction selon les types des arg
 
 ## Fonctions récursives
 
-Une fonction **récursive** s'appelle elle-même.
+Une fonction **récursive** est une fonction qui s'appelle elle-même pour résoudre un problème. C'est comme une poupée russe : pour ouvrir une grande poupée, on ouvre une plus petite à l'intérieur, puis une encore plus petite, jusqu'à arriver à la plus petite qui ne contient plus rien.
+
+### Principe fondamental
+
+Toute fonction récursive doit respecter deux règles absolues :
+
+1. **Cas de base** (condition d'arrêt) : une situation où la fonction ne s'appelle plus elle-même
+2. **Réduction du problème** : à chaque appel, le problème doit devenir plus simple et se rapprocher du cas de base
+
+### Exemple simple : compte à rebours
+
+Commençons par un exemple très simple pour comprendre le mécanisme :
+
+```csharp
+void CompteARebours(int n)
+{
+    // Cas de base : on s'arrête à 0
+    if (n <= 0)
+    {
+        Console.WriteLine("Fini !");
+        return;
+    }
+    
+    // Action pour le niveau actuel
+    Console.WriteLine(n);
+    
+    // Appel récursif avec un problème plus petit
+    CompteARebours(n - 1);
+}
+```
+
+**Trace d'exécution pour `CompteARebours(3)` :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '14px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+flowchart TD
+    A["CompteARebours(3)<br/>📝 Affiche: 3"] --> B["CompteARebours(2)<br/>📝 Affiche: 2"]
+    B --> C["CompteARebours(1)<br/>📝 Affiche: 1"]
+    C --> D["CompteARebours(0)<br/>📝 Affiche: Fini!<br/>🛑 STOP"]
+    
+    D --> E["Retour vers (1)"]
+    E --> F["Retour vers (2)"]
+    F --> G["Retour vers (3)"]
+    G --> H["Retour vers Main()"]
+    
+    classDef call fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000,white-space:nowrap
+    classDef return fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000,white-space:nowrap
+    classDef stop fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000,white-space:nowrap
+    
+    class A,B,C call
+    class D stop
+    class E,F,G,H return
+```
+
+**Sortie console :**
+```
+3
+2
+1
+Fini !
+```
+
+### La pile d'appels en action
+
+Quand une fonction s'appelle elle-même, chaque appel crée une nouvelle "couche" dans la **pile d'appels**. Visualisons ce qui se passe en mémoire :
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '18px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+flowchart LR
+    subgraph "Phase 1: Empilement des appels"
+        direction TB
+        P1["📞 CompteARebours(3)<br/>n = 3<br/>👀 Affiche 3<br/>🔄 Appelle CompteARebours(2)"]
+        P2["📞 CompteARebours(2)<br/>n = 2<br/>👀 Affiche 2<br/>🔄 Appelle CompteARebours(1)"]
+        P3["📞 CompteARebours(1)<br/>n = 1<br/>👀 Affiche 1<br/>🔄 Appelle CompteARebours(0)"]
+        P4["📞 CompteARebours(0)<br/>n = 0<br/>👀 Affiche 'Fini!'<br/>🛑 return (cas de base)<br>"]
+        P1 -.-> P2
+        P2 -.-> P3
+        P3 -.-> P4
+    end
+    
+    subgraph "Phase 2: Dépilement et retours"
+        direction TB
+        R4["✅ CompteARebours(0)<br/>terminé"]
+        R3["✅ CompteARebours(1)<br/>terminé"]
+        R2["✅ CompteARebours(2)<br/>terminé"]
+        R1["✅ CompteARebours(3)<br/>terminé"]
+        R4 --> R3
+        R3 --> R2
+        R2 --> R1
+    end
+    
+    classDef calling fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000,white-space:nowrap
+    classDef base fill:#ffebee,stroke:#f44336,stroke-width:2px,color:#000,white-space:nowrap
+    classDef returning fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#000,white-space:nowrap
+    
+    class P1,P2,P3 calling
+    class P4 base
+    class R1,R2,R3,R4 returning
+```
+
+### Exemple détaillé : calcul de factorielle
+
+La factorielle est un exemple classique de récursion. Rappel mathématique :
+- `5! = 5 × 4 × 3 × 2 × 1 = 120`
+- `n! = n × (n-1)!`
+- `0! = 1` et `1! = 1` (cas de base)
 
 ```csharp
 int Factorielle(int n)
 {
+    // Cas de base : factorielle de 0 ou 1 vaut 1
     if (n <= 1)
+    {
+        Console.WriteLine($"Cas de base : {n}! = 1");
         return 1;
-    else
-        return n * Factorielle(n - 1);
+    }
+    
+    // Cas récursif : n! = n × (n-1)!
+    Console.WriteLine($"Calcul de {n}! = {n} × {n-1}!");
+    int resultatSousProbleme = Factorielle(n - 1);
+    int resultatActuel = n * resultatSousProbleme;
+    Console.WriteLine($"Retour : {n}! = {n} × {resultatSousProbleme} = {resultatActuel}");
+    
+    return resultatActuel;
 }
 ```
 
+**Trace complète pour `Factorielle(4)` :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '12px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+flowchart TD
+    subgraph "🔽 Phase DESCENTE (empilement)"
+        A["Factorielle(4)<br/>📝 'Calcul de 4! = 4 × 3!'<br/>🔄 Appelle Factorielle(3)"]
+        B["Factorielle(3)<br/>📝 'Calcul de 3! = 3 × 2!'<br/>🔄 Appelle Factorielle(2)"]
+        C["Factorielle(2)<br/>📝 'Calcul de 2! = 2 × 1!'<br/>🔄 Appelle Factorielle(1)"]
+        D["Factorielle(1)<br/>📝 'Cas de base : 1! = 1'<br/>🔙 return 1"]
+        
+        A --> B
+        B --> C
+        C --> D
+    end
+    
+    subgraph "🔼 Phase REMONTÉE (dépilement)"
+        E["Factorielle(2)<br/>📝 'Retour : 2! = 2 × 1 = 2'<br/>🔙 return 2"]
+        F["Factorielle(3)<br/>📝 'Retour : 3! = 3 × 2 = 6'<br/>🔙 return 6"]
+        G["Factorielle(4)<br/>📝 'Retour : 4! = 4 × 6 = 24'<br/>🔙 return 24"]
+        
+        D --> E
+        E --> F
+        F --> G
+    end
+    
+    classDef descent fill:#e8f5e8,stroke:#4caf50,stroke-width:2px,color:#000,white-space:nowrap
+    classDef base fill:#ffebee,stroke:#f44336,stroke-width:2px,color:#000,white-space:nowrap
+    classDef ascent fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#000,white-space:nowrap
+    
+    class A,B,C descent
+    class D base
+    class E,F,G ascent
+```
+
+**Sortie console complète :**
+```
+Calcul de 4! = 4 × 3!
+Calcul de 3! = 3 × 2!
+Calcul de 2! = 2 × 1!
+Cas de base : 1! = 1
+Retour : 2! = 2 × 1 = 2
+Retour : 3! = 3 × 2 = 6
+Retour : 4! = 4 × 6 = 24
+```
+
+### Visualisation de la pile d'appels avec les variables
+
+Voyons comment les variables locales s'accumulent dans la pile :
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '13px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+flowchart TB
+    subgraph "🏗️ État de la pile au moment le plus profond"
+        direction TB
+        S4["🟦 Factorielle(4)<br/>📋 n = 4<br/>⏳ En attente de Factorielle(3)"]
+        S3["🟩 Factorielle(3)<br/>📋 n = 3<br/>⏳ En attente de Factorielle(2)"]
+        S2["🟨 Factorielle(2)<br/>📋 n = 2<br/>⏳ En attente de Factorielle(1)"]
+        S1["🟥 Factorielle(1)<br/>📋 n = 1<br/>✅ Cas de base : return 1"]
+        
+        S1 --> S2
+        S2 --> S3
+        S3 --> S4
+        
+        style S4 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+        style S3 fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+        style S2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+        style S1 fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    end
+    
+    subgraph "🔄 Puis dépilement progressif"
+        direction TB
+        D1["🟥 return 1"] 
+        D2["🟨 reçoit 1<br/>calcule 2×1=2<br/>return 2"]
+        D3["🟩 reçoit 2<br/>calcule 3×2=6<br/>return 6"]
+        D4["🟦 reçoit 6<br/>calcule 4×6=24<br/>return 24"]
+        
+        D1 --> D2
+        D2 --> D3
+        D3 --> D4
+        
+        style D1 fill:#ffebee,stroke:#d32f2f,stroke-width:2px,white-space:nowrap
+        style D2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,white-space:nowrap
+        style D3 fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,white-space:nowrap
+        style D4 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,white-space:nowrap
+    end
+```
+
+### Exemple avec accumulation : somme des nombres
+
+Voici un autre exemple pour bien comprendre comment les valeurs s'accumulent :
+
+```csharp
+int SommeJusquA(int n)
+{
+    // Cas de base
+    if (n <= 0)
+    {
+        Console.WriteLine("Cas de base : somme jusqu'à 0 = 0");
+        return 0;
+    }
+    
+    // Cas récursif : somme(n) = n + somme(n-1)
+    Console.WriteLine($"Calcul : somme({n}) = {n} + somme({n-1})");
+    int sommeReste = SommeJusquA(n - 1);
+    int resultat = n + sommeReste;
+    Console.WriteLine($"Retour : somme({n}) = {n} + {sommeReste} = {resultat}");
+    
+    return resultat;
+}
+```
+
+**Pour `SommeJusquA(4)` (calcule 4+3+2+1+0) :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+graph TD
+    A["SommeJusquA(4)<br/>🧮 4 + SommeJusquA(3)"] --> B["SommeJusquA(3)<br/>🧮 3 + SommeJusquA(2)"]
+    B --> C["SommeJusquA(2)<br/>🧮 2 + SommeJusquA(1)"]
+    C --> D["SommeJusquA(1)<br/>🧮 1 + SommeJusquA(0)"]
+    D --> E["SommeJusquA(0)<br/>🔚 return 0"]
+    
+    E -.-> F["1 + 0 = 1<br/>🔙 return 1"]
+    F -.-> G["2 + 1 = 3<br/>🔙 return 3"]
+    G -.-> H["3 + 3 = 6<br/>🔙 return 6"]
+    H -.-> I["4 + 6 = 10<br/>🔙 return 10"]
+    
+    classDef down fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px,color:#000,padding:50px,white-space:nowrap
+    classDef base fill:#dcedc8,stroke:#689f38,stroke-width:2px,color:#000,padding:50px,white-space:nowrap
+    classDef up fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000,padding:50px,white-space:nowrap
+    
+    class A,B,C,D down
+    class E base
+    class F,G,H,I up
+```
+
+### Récursion avec chaînes de caractères
+
+Exemple d'inversion d'une chaîne de caractères :
+
+```csharp
+string InverserChaine(string texte)
+{
+    // Cas de base : chaîne vide ou un seul caractère
+    if (texte.Length <= 1)
+    {
+        Console.WriteLine($"Cas de base : '{texte}' -> '{texte}'");
+        return texte;
+    }
+    
+    // Cas récursif : dernier caractère + inversion du reste
+    char premierChar = texte[0];
+    string reste = texte.Substring(1);
+    
+    Console.WriteLine($"Traitement de '{texte}' : '{premierChar}' + inverser('{reste}')");
+    
+    string resteInverse = InverserChaine(reste);
+    string resultat = resteInverse + premierChar;
+    
+    Console.WriteLine($"Retour : inverser('{reste}') + '{premierChar}' = '{resteInverse}' + '{premierChar}' = '{resultat}'");
+    
+    return resultat;
+}
+```
+
+**Pour `InverserChaine("ABC")` :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '12px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+flowchart TD
+    A["InverserChaine('ABC')<br/>🔤 'A' + InverserChaine('BC')"]
+    B["InverserChaine('BC')<br/>🔤 'B' + InverserChaine('C')"]
+    C["InverserChaine('C')<br/>🔚 Cas de base : return 'C'"]
+    
+    D["'C' + 'B' = 'CB'<br/>🔙 return 'CB'"]
+    E["'CB' + 'A' = 'CBA'<br/>🔙 return 'CBA'"]
+    
+    A --> B
+    B --> C
+    C -.-> D
+    D -.-> E
+    
+    classDef process fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef base fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef result fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    
+    class A,B process
+    class C base
+    class D,E result
+```
+
+### Récursion avec structures conditionnelles : nombre de Fibonacci
+
+Les nombres de Fibonacci illustrent une récursion avec deux appels :
+
+```csharp
+int Fibonacci(int n)
+{
+    // Affichage pour comprendre l'exécution
+    Console.WriteLine($"  {"".PadLeft(n * 2)}Fibonacci({n})");
+    
+    // Cas de base
+    if (n <= 1)
+    {
+        Console.WriteLine($"  {"".PadLeft(n * 2)}-> Cas de base : Fibonacci({n}) = {n}");
+        return n;
+    }
+    
+    // Cas récursif : F(n) = F(n-1) + F(n-2)
+    Console.WriteLine($"  {"".PadLeft(n * 2)}-> Fibonacci({n}) = Fibonacci({n-1}) + Fibonacci({n-2})");
+    
+    int fib1 = Fibonacci(n - 1);
+    int fib2 = Fibonacci(n - 2);
+    int resultat = fib1 + fib2;
+    
+    Console.WriteLine($"  {"".PadLeft(n * 2)}-> Fibonacci({n}) = {fib1} + {fib2} = {resultat}");
+    
+    return resultat;
+}
+```
+
+**Arbre d'appels pour `Fibonacci(4)` :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '11px', 'fontFamily': 'Arial', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'primaryBorderColor': '#000000', 'lineColor': '#000000' }}}%%
+graph TD
+    A["Fibonacci(4)<br/>F(3) + F(2)"]
+    
+    B["Fibonacci(3)<br/>F(2) + F(1)"]
+    C["Fibonacci(2)<br/>F(1) + F(0)"]
+    
+    D["Fibonacci(2)<br/>F(1) + F(0)"]
+    E["Fibonacci(1)<br/>🔚 return 1"]
+    F["Fibonacci(1)<br/>🔚 return 1"]
+    G["Fibonacci(0)<br/>🔚 return 0"]
+    H["Fibonacci(1)<br/>🔚 return 1"]
+    I["Fibonacci(0)<br/>🔚 return 0"]
+    
+    A --> B
+    A --> C
+    B --> D
+    B --> E
+    C --> F
+    C --> G
+    D --> H
+    D --> I
+    
+    classDef internal fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    classDef base fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+    
+    class A,B,C,D internal
+    class E,F,G,H,I base
+```
+
+### Erreurs courantes et débogage
+
+#### 1. Oubli du cas de base
+
+```csharp
+// ❌ ERREUR : récursion infinie !
+int MauvaisComptage(int n)
+{
+    Console.WriteLine(n);
+    return MauvaisComptage(n - 1);  // Pas de condition d'arrêt !
+}
+```
+
+**Résultat :** `StackOverflowException` - La pile d'appels déborde.
+
+#### 2. Cas de base incorrect
+
+```csharp
+// ❌ ERREUR : condition mal formulée
+int FactorielleBuggee(int n)
+{
+    if (n == 1)  // Que se passe-t-il si n = 0 ?
+        return 1;
+    return n * FactorielleBuggee(n - 1);
+}
+```
+
+**Problème :** Si on appelle `FactorielleBuggee(0)`, le cas de base n'est jamais atteint !
+
+#### 3. Progression incorrete vers le cas de base
+
+```csharp
+// ❌ ERREUR : n ne diminue jamais
+int ProgressionIncorrecte(int n)
+{
+    if (n <= 0)
+        return 0;
+    return n + ProgressionIncorrecte(n);  // Oups ! Devrait être n-1
+}
+```
+
+### Conseils pour bien écrire une fonction récursive
+
+1. **Identifiez le cas de base d'abord** : quand doit-on s'arrêter ?
+2. **Vérifiez la progression** : le paramètre se rapproche-t-il toujours du cas de base ?
+3. **Testez avec de petites valeurs** : commencez par n=0, n=1, n=2...
+4. **Ajoutez des traces** : utilisez `Console.WriteLine` pour voir ce qui se passe
+5. **Pensez "diviser pour régner"** : comment décomposer le problème en sous-problèmes plus simples ?
+
+### Récursion vs itération
+
+Souvent, un problème récursif peut aussi être résolu de manière itérative :
+
+```csharp
+// Version récursive de la factorielle
+int FactorielleRecursive(int n)
+{
+    if (n <= 1) return 1;
+    return n * FactorielleRecursive(n - 1);
+}
+
+// Version itérative de la factorielle
+int FactorielleIterative(int n)
+{
+    int resultat = 1;
+    for (int i = 2; i <= n; i++)
+    {
+        resultat *= i;
+    }
+    return resultat;
+}
+```
+
+**Quand utiliser la récursion ?**
+- Quand le problème se décompose naturellement en sous-problèmes similaires
+- Pour des structures d'arbre ou des algorithmes "diviser pour régner"
+- Quand la solution récursive est plus claire et plus facile à comprendre
+
+**Quand éviter la récursion ?**
+- Pour de très grandes valeurs (risque de débordement de pile)
+- Quand la version itérative est beaucoup plus efficace
+- Quand il y a beaucoup de calculs redondants (comme Fibonacci naïf)
+
 ::: danger Attention
-Les fonctions récursives doivent toujours avoir une condition de sortie pour éviter un débordement de pile.
+Les fonctions récursives doivent toujours avoir :
+- **Un cas de base** clairement défini
+- **Une progression** vers ce cas de base à chaque appel récursif
+- **Une limite raisonnable** pour éviter le débordement de pile (`StackOverflowException`)
+:::
+
+::: tip Débogage de la récursion
+Pour comprendre une fonction récursive qui ne fonctionne pas :
+1. Ajoutez des `Console.WriteLine` avec le niveau d'indentation
+2. Vérifiez que le cas de base est atteint
+3. Tracez les valeurs des paramètres à chaque appel
+4. Testez avec les plus petites valeurs possibles
 :::
 
 ## Fonctions anonymes et expressions lambda
