@@ -2,15 +2,15 @@
 
 ## Concept de base
 
-Imaginez une fonction comme une petite machine à laquelle on confie une tâche précise. On lui fournit des éléments en entrée, elle exécute des étapes bien définies, puis elle nous renvoie éventuellement un résultat. C’est une manière d’organiser sa pensée et son code : on découpe un problème en gestes simples, réutilisables, et on leur donne un nom parlant.
+Imaginez une fonction comme une petite machine à laquelle on confie une tâche précise. On lui fournit des éléments en entrée, elle exécute des étapes bien définies, puis elle nous renvoie éventuellement un résultat. C'est une manière d'organiser sa pensée et son code : on découpe un problème en gestes simples, réutilisables, et on leur donne un nom parlant.
 
-- Une **fonction** est un bloc d'instructions qui porte un nom, qui peut prendre des **paramètres** (int, char, string, ...) en entrée et peut renvoyer une **valeur** en sortie.
+Une **fonction** est un bloc d'instructions qui porte un nom, qui peut prendre des **paramètres** en entrée et peut renvoyer une **valeur** en sortie.
 
-Pourquoi des fonctions ?
-- Clarifier le code en le découpant en morceaux cohérents et faciles à lire.
-- Éviter la répétition (DRY: Don’t Repeat Yourself) et donc réduire les erreurs.
-- Nommer l’intention: un bon nom raconte ce que fait le code.
-- Tester plus facilement chaque pièce du programme, indépendamment des autres.
+**Pourquoi utiliser des fonctions ?**
+- **Clarifier le code** en le découpant en morceaux cohérents et faciles à lire
+- **Éviter la répétition** (DRY: Don't Repeat Yourself) et donc réduire les erreurs
+- **Nommer l'intention** : un bon nom raconte ce que fait le code
+- **Tester plus facilement** chaque pièce du programme, indépendamment des autres
 
 ## Définition d'une fonction
 
@@ -45,11 +45,74 @@ Pour appeler cette fonction :
 AfficheNFois("Bonjour", 4);
 ```
 
+## Signature de fonction
+
+La **signature d'une fonction** est sa carte d'identité : elle décrit précisément comment identifier et utiliser cette fonction. Elle comprend :
+
+1. **Le nom de la fonction**
+2. **Le nombre de paramètres**
+3. **Le type de chaque paramètre**
+4. **L'ordre des paramètres**
+
+::: tip Important
+Le **type de retour ne fait PAS partie de la signature** en C#. Deux fonctions ne peuvent pas avoir la même signature même si elles retournent des types différents.
+:::
+
+### Exemples de signatures
+
+```csharp
+// Signature : Affiche(string)
+void Affiche(string texte)
+
+// Signature : Addition(int, int)
+int Addition(int a, int b)
+
+// Signature : CalculerMoyenne(double, double, double)
+double CalculerMoyenne(double note1, double note2, double note3)
+
+// Signature : ConvertirEnMajuscules(string)
+string ConvertirEnMajuscules(string texte)
+```
+
+### Signatures distinctes vs identiques
+
+Ces fonctions ont des **signatures différentes** (surcharge valide) :
+```csharp
+void Afficher(int nombre)           // Signature : Afficher(int)
+void Afficher(string texte)         // Signature : Afficher(string)  
+void Afficher(int a, int b)         // Signature : Afficher(int, int)
+void Afficher(string nom, int age)  // Signature : Afficher(string, int)
+```
+
+Ces fonctions ont la **même signature** (erreur de compilation) :
+```csharp
+void Calculer(int a, int b)         // Signature : Calculer(int, int)
+int Calculer(int x, int y)          // ❌ ERREUR ! Même signature
+double Calculer(int nb1, int nb2)   // ❌ ERREUR ! Même signature
+```
+
+Le compilateur ne peut pas distinguer ces fonctions car elles ont la même signature, même si :
+- Les noms des paramètres sont différents (`a,b` vs `x,y` vs `nb1,nb2`)
+- Les types de retour sont différents (`void` vs `int` vs `double`)
+
+### Pourquoi la signature est-elle importante ?
+
+1. **Identification unique** : la signature permet au compilateur de savoir quelle fonction appeler
+2. **Surcharge de fonctions** : on peut avoir plusieurs fonctions avec le même nom si leurs signatures sont différentes
+3. **Résolution d'appel** : le compilateur choisit automatiquement la bonne fonction selon les arguments fournis
+
+```csharp
+// Le compilateur choisit automatiquement selon les arguments
+Afficher(42);           // Appelle Afficher(int)
+Afficher("Hello");      // Appelle Afficher(string)
+Afficher(1, 2);         // Appelle Afficher(int, int)
+Afficher("Alice", 25);  // Appelle Afficher(string, int)
+```
+
 ## Fonction avec valeur de retour
 
-Reprenons notre métaphore de la « petite machine » : parfois, on lui demande simplement d’agir (afficher un texte), parfois on lui demande de calculer et de nous rapporter un résultat. Dans ce second cas, la fonction s’engage à « rendre » une valeur à l’aide du mot-clé `return`.
+Une fonction peut **renvoyer une valeur** avec le mot-clé `return`. Reprenons notre métaphore de la « petite machine » : parfois, on lui demande simplement d'agir (afficher un texte), parfois on lui demande de calculer et de nous rapporter un résultat.
 
-Une fonction peut donc **renvoyer une valeur** avec `return` :
 ```csharp
 int Somme(int a, int b)
 {
@@ -58,7 +121,7 @@ int Somme(int a, int b)
 }
 ```
 
-Astuce de lecture: le type placé avant le nom de la fonction (`int` ici) annonce la nature de la valeur promise en retour. Si la fonction ne renvoie rien, on écrit `void`.
+💡 **Astuce de lecture** : le type placé avant le nom de la fonction (`int` ici) annonce la nature de la valeur promise en retour. Si la fonction ne renvoie rien, on écrit `void`.
 
 Pour utiliser la valeur renvoyée :
 ```csharp
