@@ -231,18 +231,20 @@ flowchart LR
     classDef fonction fill:#ff9980,stroke:#cc3300,stroke-width:2px,color:#fff,font-weight:bold
 ```
 
-## Types valeur vs types référence
-
-Pour bien comprendre ce qui se passe « sous le capot », il faut se rappeler qu'il faut distinguer deux familles de types. Cette distinction explique pourquoi, parfois, une modification semble « rester » après l’appel d’une fonction… et parfois pas.
-
-Les comportements du passage de paramètres varient selon qu'il s'agit de types valeur (int, bool, struct...) ou de types référence (objets, tableaux, chaînes...).
-
 ### Reconnaître le passage par valeur/référence d'un type valeur/référence
 
 | Types \ Passage de paramètre | Passage par valeur | Passage par référence |
 |------------------------------|--------------------|-----------------------|
 | Type valeur                  | `f(int i)`         | `f(ref int i)`        |
 | Type référence               | `f(List<int> l)`   | `f(ref List<int> l)`  |
+
+
+## Types valeur vs types référence
+
+Pour bien comprendre ce qui se passe « sous le capot », il faut se rappeler qu'il faut distinguer deux familles de types. Cette distinction explique pourquoi, parfois, une modification semble « rester » après l’appel d’une fonction… et parfois pas.
+
+Les comportements du passage de paramètres varient selon qu'il s'agit de types valeur (int, bool, struct...) ou de types référence (objets, tableaux, chaînes...).
+
 
 ### Types valeur : passage par valeur vs référence
 
