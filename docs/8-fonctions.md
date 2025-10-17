@@ -237,6 +237,13 @@ Pour bien comprendre ce qui se passe « sous le capot », il faut se rappeler qu
 
 Les comportements du passage de paramètres varient selon qu'il s'agit de types valeur (int, bool, struct...) ou de types référence (objets, tableaux, chaînes...).
 
+### Reconnaître le passage par valeur/référence d'un type valeur/référence
+
+| Types \ Passage de paramètre | Passage par valeur | Passage par référence |
+|------------------------------|--------------------|-----------------------|
+| Type valeur                  | `f(int i)`         | `f(ref int i)`        |
+| Type référence               | `f(List<int> l)`   | `f(ref List<int> l)`  |
+
 ### Types valeur : passage par valeur vs référence
 
 Les **types valeur** (int, bool, char, double, struct...) stockent directement leur contenu dans la variable. Imaginez-les comme des boîtes qui contiennent réellement la valeur.
