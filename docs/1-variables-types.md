@@ -68,7 +68,7 @@ int[] notes = new int[3]; // notes référence un tableau d'entiers
 | double   | 8 octets | 15-16 chiffres    | ±5,0×10⁻³²⁴ à ±1,7×10³⁰⁸                |
 | decimal  | 16 octets| 28-29 décimales   | ±1,0×10⁻²⁸ à ±7,9×10²⁸                  |
 
-> **À retenir** :
+> **A noter** :
 > - Utilisez `int` pour les entiers courants, `double` pour les réels, `decimal` pour les calculs financiers.
 > - `float` et `double` sont sujets à des imprécisions d'arrondi.
 

@@ -255,6 +255,14 @@ int age = 25;
 // Deux variables séparées, pas pratique...
 ```
 
+### Qu'est-ce qu'un tuple ?
+
+Un **tuple** est une structure de données qui permet de regrouper plusieurs valeurs de **types potentiellement différents** sous une seule variable. Contrairement aux tableaux ou aux listes (qui contiennent des éléments du même type), un tuple peut mixer les types : des chaînes de caractères, des nombres, des booléens, etc.
+
+::: info Définition
+Un **tuple** est un regroupement immutable de plusieurs valeurs de types différents. C'est parfait quand vous avez besoin de retourner plusieurs valeurs ou de regrouper des données liées mais hétérogènes.
+:::
+
 ### Solution avec les tuples
 
 ```csharp
@@ -273,6 +281,90 @@ Console.WriteLine($"Nom: {personne2.Item1}");
 Console.WriteLine($"Âge: {personne2.Item2}");
 ```
 
+### Déballage de tuples (Deconstruction)
+
+L'une des fonctionnalités les plus pratiques des tuples est la possibilité de **déconstruire** (ou "casser") un tuple directement en plusieurs variables, sans créer une variable intermédiaire.
+
+#### Déballage simple
+
+```csharp
+// Au lieu de créer un tuple intermédiaire...
+(string nom, int age) personne = ("Alice", 25);
+string nomAlice = personne.nom;
+int ageAlice = personne.age;
+
+// Vous pouvez faire directement :
+(string nom, int age) = ("Alice", 25);
+// Les variables 'nom' et 'age' sont créées directement !
+Console.WriteLine($"Nom: {nom}");    // Affiche "Alice"
+Console.WriteLine($"Âge: {age}");    // Affiche 25
+```
+
+#### Déballage avec des variables existantes
+
+```csharp
+string nom;
+int age;
+
+// Déballage dans des variables existantes (avec le mot-clé 'var')
+(nom, age) = ("Bob", 30);
+Console.WriteLine($"{nom} a {age} ans");
+```
+
+#### Ignorer certaines valeurs avec le caractère `_`
+
+Parfois, vous ne vous intéressez qu'à certaines valeurs du tuple :
+
+```csharp
+// Tuple avec latitude, longitude et altitude
+(double lat, double lon, double alt) = (50.8503, 4.3517, 150.5);
+
+// Vous ne voulez que la latitude et la longitude, ignorez l'altitude
+(double latitude, double longitude, _) = (50.8503, 4.3517, 150.5);
+
+Console.WriteLine($"Position: {latitude}, {longitude}");
+```
+
+#### Utilisation en boucles
+
+```csharp
+// Une liste de tuples (nom, âge)
+var personnes = new List<(string, int)>
+{
+    ("Alice", 25),
+    ("Bob", 30),
+    ("Charlie", 22)
+};
+
+// Déballage direct dans la boucle foreach
+foreach ((string nom, int age) in personnes)
+{
+    Console.WriteLine($"{nom} a {age} ans");
+}
+```
+
+### Tuples et retour de fonction
+
+Les tuples sont particulièrement utiles quand vous voulez qu'une fonction retourne **plusieurs valeurs** :
+
+```csharp
+// Fonction qui divise et retourne le quotient et le reste
+(int quotient, int reste) Diviser(int dividende, int diviseur)
+{
+    int q = dividende / diviseur;
+    int r = dividende % diviseur;
+    return (q, r);
+}
+
+// Utilisation sans déballage
+var resultat = Diviser(17, 5);
+Console.WriteLine($"Quotient: {resultat.quotient}, Reste: {resultat.reste}");
+
+// Utilisation avec déballage
+(int q, int r) = Diviser(17, 5);
+Console.WriteLine($"Quotient: {q}, Reste: {r}");
+```
+
 ### Exemples pratiques de tuples
 
 ```csharp
@@ -284,7 +376,89 @@ Console.WriteLine($"Âge: {personne2.Item2}");
 
 // Informations d'un étudiant
 (string nom, int age, double moyenne) etudiant = ("Marie", 20, 15.5);
+
+// Résultat d'une recherche (trouvé ?, valeur)
+(bool trouvé, string valeur) recherche = (true, "résultat");
+
+// Coordonnées d'un point 3D
+(double x, double y, double z) point3D = (10.5, 20.3, 5.8);
 ```
+
+### Tuples nommés vs tuples sans nom
+
+```csharp
+// Tuple NOMMÉ (recommandé)
+(string nom, int age) personne1 = ("Alice", 25);
+Console.WriteLine(personne1.nom);  // ✅ Clair et lisible
+
+// Tuple SANS NOM
+(string, int) personne2 = ("Bob", 30);
+Console.WriteLine(personne2.Item1);  // ⚠️ Moins lisible, utilise Item1, Item2...
+```
+
+#### Qu'est-ce que Item1, Item2, Item3, ... ?
+
+Quand vous créez un tuple **sans nommer ses éléments**, C# génère automatiquement des noms de propriétés génériques : `Item1`, `Item2`, `Item3`, etc. Ces noms reflètent simplement la **position** de chaque élément dans le tuple.
+
+```csharp
+// Tuple sans noms : (string, int, double)
+(string, int, double) donnees = ("Alice", 25, 15.5);
+
+// Accès par les propriétés auto-générées
+Console.WriteLine(donnees.Item1);   // "Alice"    (1er élément)
+Console.WriteLine(donnees.Item2);   // 25         (2e élément)
+Console.WriteLine(donnees.Item3);   // 15.5       (3e élément)
+```
+
+**Tableau des correspondances :**
+
+| Propriété | Position | Sens |
+|-----------|----------|---------|
+| `Item1` | 1ère | Premier élément |
+| `Item2` | 2ème | Deuxième élément |
+| `Item3` | 3ème | Troisième élément |
+| `Item4` | 4ème | Quatrième élément |
+| ... et ainsi de suite | ... | ... |
+
+#### Exemple comparatif : nommé vs sans nom
+
+```csharp
+// ❌ SANS NOM - difficile à comprendre
+(string, int, double) etudiant1 = ("Marie", 20, 15.5);
+Console.WriteLine($"Item1: {etudiant1.Item1}");  // Qu'est-ce que c'est ? Le nom ?
+Console.WriteLine($"Item2: {etudiant1.Item2}");  // L'âge ? Le numéro d'étudiant ?
+Console.WriteLine($"Item3: {etudiant1.Item3}");  // La moyenne ? L'année ?
+
+// ✅ AVEC NOMS - très clair !
+(string nom, int age, double moyenne) etudiant2 = ("Marie", 20, 15.5);
+Console.WriteLine($"Nom: {etudiant2.nom}");           // Évident : c'est le nom
+Console.WriteLine($"Âge: {etudiant2.age}");          // Évident : c'est l'âge
+Console.WriteLine($"Moyenne: {etudiant2.moyenne}");  // Évident : c'est la moyenne
+```
+
+#### Quand utiliser Item1, Item2, ... ?
+
+En pratique, vous ne devriez **presque jamais** utiliser `Item1`, `Item2`, etc. parce que :
+
+1. ❌ **C'est peu lisible** : On ne comprend pas à quoi correspondent les données
+2. ❌ **C'est source d'erreurs** : Facile de se tromper de position
+3. ❌ **C'est difficile à maintenir** : Si vous devez modifier le tuple plus tard, les positions Item1, Item2 deviennent confuses
+
+Les seules occasions où vous pourriez les rencontrer :
+- Dans du code hérité ou mal écrit
+- Quand vous devez traiter un tuple reçu d'une fonction externe (et vous n'avez pas les noms)
+
+```csharp
+// Exemple : vous recevez un tuple d'une fonction externe sans noms clairs
+(string, string, int) resultat = ObtenirDonnees();
+// Vous êtes obligé d'utiliser Item1, Item2, Item3 si les noms ne sont pas définis
+```
+
+::: tip Conseil
+**Toujours nommer les éléments de votre tuple** pour une meilleure lisibilité du code. `(string nom, int age, double moyenne)` est beaucoup plus clair que `(string, int, double)`.
+
+Les noms parlants rendent votre code auto-documenté et facilement compréhensible par vous-même et par les autres !
+:::
 
 ## 6. LINQ - Manipuler les collections facilement
 
