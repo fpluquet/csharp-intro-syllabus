@@ -528,16 +528,181 @@ var notesDecroissantes = notes.OrderByDescending(n => n).ToList();
 
 #### 4. First(), Last(), Single() - Récupérer des éléments spécifiques
 
+##### First() - Récupérer le premier élément
+
 ```csharp
 List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
 
+// Obtenir le premier élément
 int premier = nombres.First();           // 1
-int dernier = nombres.Last();            // 5
+
+// Obtenir le premier élément qui satisfait une condition
 int premierPair = nombres.First(n => n % 2 == 0);  // 2
 
-// Versions "sécurisées" qui retournent null si rien n'est trouvé
-int? premierGrand = nombres.FirstOrDefault(n => n > 10);  // null
+// ❌ Que se passe-t-il si la liste est vide ?
+List<int> vide = new List<int>();
+int resultat = vide.First();  // ⚠️ EXCEPTION ! InvalidOperationException
 ```
+
+##### Last() - Récupérer le dernier élément
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
+
+// Obtenir le dernier élément
+int dernier = nombres.Last();            // 5
+
+// Obtenir le dernier élément qui satisfait une condition
+int dernierPair = nombres.Last(n => n % 2 == 0);  // 4
+
+// ❌ Que se passe-t-il si la liste est vide ou aucun match ?
+List<int> vide = new List<int>();
+int resultat = vide.Last();  // ⚠️ EXCEPTION ! InvalidOperationException
+
+List<int> impairs = new List<int> { 1, 3, 5 };
+int premierPair = impairs.Last(n => n % 2 == 0);  // ⚠️ EXCEPTION ! Aucun pair trouvé
+```
+
+##### Single() - Récupérer l'unique élément
+
+`Single()` est spécialisé pour les cas où vous attendez **exactement un seul élément**. Contrairement à `First()` qui retourne le premier élément (même s'il y en a d'autres), `Single()` vérifie qu'il n'y a **qu'un seul** élément.
+
+```csharp
+// ✅ Cas normal : une liste avec exactement 1 élément
+List<int> unique = new List<int> { 42 };
+int valeur = unique.Single();  // 42 ✓
+
+// ✅ Single() avec condition - trouver l'UNIQUE étudiant qui a cette matricule
+var etudiants = new List<(string nom, int matricule)>
+{
+    ("Alice", 1001),
+    ("Bob", 1002),
+    ("Charlie", 1003)
+};
+
+var etudiant = etudiants.Single(e => e.matricule == 1002);
+// Résultat : ("Bob", 1002)
+Console.WriteLine($"Étudiant trouvé: {etudiant.nom}");  // Affiche: Bob
+```
+
+Mais attention ! Single() est très strict :
+
+```csharp
+// ❌ Erreur 1 : plusieurs éléments dans la liste
+List<int> plusieurs = new List<int> { 1, 2, 3 };
+int valeur = plusieurs.Single();  
+// ⚠️ EXCEPTION ! InvalidOperationException : "Sequence contains more than one element"
+
+// ❌ Erreur 2 : liste vide
+List<int> vide = new List<int>();
+int valeur = vide.Single();  
+// ⚠️ EXCEPTION ! InvalidOperationException : "Sequence contains no elements"
+
+// ❌ Erreur 3 : aucun élément ne satisfait la condition
+List<int> nombres = new List<int> { 1, 2, 3 };
+int resultat = nombres.Single(n => n > 10);  
+// ⚠️ EXCEPTION ! InvalidOperationException
+
+// ❌ Erreur 4 : plusieurs éléments satisfont la condition
+List<int> nombres = new List<int> { 2, 4, 6 };
+int resultat = nombres.Single(n => n % 2 == 0);  
+// ⚠️ EXCEPTION ! Il y a 3 paires, pas une seule !
+```
+
+##### Comparaison : First() vs Single()
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
+
+// First() : retourne simplement le premier
+int first = nombres.First(n => n > 2);     // 3 (le premier qui est > 2)
+
+// Single() : vérifie qu'il n'y en a qu'un seul
+int single = nombres.Single(n => n > 4);   // 5 (c'est le SEUL qui est > 4) ✓
+int single2 = nombres.Single(n => n > 2);  // ⚠️ EXCEPTION ! Il y en a 3 (3, 4, 5)
+```
+
+##### Versions "sécurisées" avec OrDefault()
+
+Pour éviter les exceptions, utilisez `FirstOrDefault()`, `LastOrDefault()` et `SingleOrDefault()` :
+
+```csharp
+List<int> nombres = new List<int> { 1, 2, 3, 4, 5 };
+
+// Versions sécurisées - retournent null/default si rien trouvé
+int? premierGrand = nombres.FirstOrDefault(n => n > 10);      // null
+int? dernierGrand = nombres.LastOrDefault(n => n > 10);       // null
+int? singleGrand = nombres.SingleOrDefault(n => n > 10);      // null
+
+// Avec une valeur par défaut spécifiée
+int premierGrandDef = nombres.FirstOrDefault(n => n > 10, -1);      // -1
+int dernierGrandDef = nombres.LastOrDefault(n => n > 10, -1);       // -1
+int singleGrandDef = nombres.SingleOrDefault(n => n > 10, -1);      // -1
+```
+
+::: warning Important sur SingleOrDefault()
+Même avec `SingleOrDefault()`, une exception est levée s'il y a **plusieurs** éléments qui satisfont la condition !
+```csharp
+List<int> nombres = new List<int> { 2, 4, 6 };
+
+// ❌ EXCEPTION quand même ! Même avec OrDefault()
+int resultat = nombres.SingleOrDefault(n => n % 2 == 0);  // Il y en a 3 !
+```
+
+`SingleOrDefault()` retourne seulement null si :
+- La liste est vide OU
+- Aucun élément ne satisfait la condition
+
+Mais si **plus d'un** élément correspond, il lève quand même une exception.
+:::
+
+##### Exemple pratique : valider l'unicité des données
+
+```csharp
+// Scénario : vérifier qu'un utilisateur n'existe qu'une fois
+var utilisateurs = new List<(string email, string nom)>
+{
+    ("alice@example.com", "Alice"),
+    ("bob@example.com", "Bob"),
+    ("charlie@example.com", "Charlie")
+};
+
+// Chercher un utilisateur spécifique
+string emailRecherche = "bob@example.com";
+
+try
+{
+    var utilisateur = utilisateurs.Single(u => u.email == emailRecherche);
+    Console.WriteLine($"Utilisateur trouvé : {utilisateur.nom}");
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Erreur : {ex.Message}");
+    // Pourrait signifier que l'email n'existe pas OU apparaît plusieurs fois (bug!)
+}
+
+// Version plus sûre avec SingleOrDefault()
+var utilisateurOpt = utilisateurs.SingleOrDefault(u => u.email == emailRecherche);
+if (utilisateurOpt != default)
+{
+    Console.WriteLine($"Utilisateur trouvé : {utilisateurOpt.nom}");
+}
+else
+{
+    Console.WriteLine($"Utilisateur non trouvé");
+}
+```
+
+##### Résumé comparatif
+
+| Méthode | Retourne | Si 0 match | Si 1+ match | Avec condition |
+|---------|----------|-----------|-----------|-----------|
+| `First()` | 1er élément | Exception | 1er trouvé ✓ | 1er qui satisfait |
+| `Last()` | Dernier élément | Exception | Dernier trouvé ✓ | Dernier qui satisfait |
+| `Single()` | Unique élément | Exception | Exception si 2+ | ✓ MAIS exception si 2+ |
+| `FirstOrDefault()` | 1er ou null | null | 1er trouvé ✓ | 1er qui satisfait ou null |
+| `LastOrDefault()` | Dernier ou null | null | Dernier trouvé ✓ | Dernier qui satisfait ou null |
+| `SingleOrDefault()` | Unique ou null | null | Exception si 2+ | ✓ MAIS exception si 2+ |
 
 #### 5. Count() et Sum() - Statistiques
 
