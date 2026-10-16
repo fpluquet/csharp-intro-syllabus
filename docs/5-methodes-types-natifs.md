@@ -25,6 +25,7 @@ Le type `string` est l'un des plus riches en méthodes utiles pour manipuler du 
 | `EndsWith()` | `bool EndsWith(string value)` | Vérifie si la chaîne se termine par une sous-chaîne |
 | `Replace()` | `string Replace(string oldValue, string newValue)` | Remplace toutes les occurrences d'une sous-chaîne |
 | `Split()` | `string[] Split(char separator)` | Divise la chaîne en tableau selon un séparateur |
+| `CompareTo()` | `int CompareTo(string strB)` | Compare deux chaînes (ordre alphabétique) |
 | `IsNullOrEmpty()` | `static bool IsNullOrEmpty(string value)` | Vérifie si une chaîne est null ou vide |
 
 ### Exemples pratiques
@@ -243,6 +244,64 @@ class Program
         for (int i = 0; i < mots.Length; i++)
         {
             Console.WriteLine($"Mot {i + 1}: {mots[i]}");
+        }
+        
+        // CompareTo() - Comparer (ordre alphabétique)
+        string mot1 = "pomme";
+        string mot2 = "banane";
+        string mot3 = "pomme";
+        
+        int comparaison = mot1.CompareTo(mot2);
+        Console.WriteLine($"'pomme' comparé à 'banane': {comparaison}"); // > 0 (pomme > banane)
+        
+        comparaison = mot2.CompareTo(mot1);
+        Console.WriteLine($"'banane' comparé à 'pomme': {comparaison}"); // < 0 (banane < pomme)
+        
+        comparaison = mot1.CompareTo(mot3);
+        Console.WriteLine($"'pomme' comparé à 'pomme': {comparaison}"); // 0 (égal)
+        
+        // Interprétation du résultat :
+        // < 0 : la chaîne précède l'autre (avant dans l'ordre alphabétique)
+        //   0 : les chaînes sont égales
+        // > 0 : la chaîne suit l'autre (après dans l'ordre alphabétique)
+        
+        // Cas d'usage : trier des noms
+        string[] noms = {"Dupont", "Martin", "Bernard", "Moreau"};
+        Console.WriteLine("Noms avant tri:");
+        foreach (string nom in noms)
+        {
+            Console.WriteLine($"- {nom}");
+        }
+        
+        // Tri simple avec CompareTo (tri à bulles)
+        for (int i = 0; i < noms.Length - 1; i++)
+        {
+            for (int j = 0; j < noms.Length - i - 1; j++)
+            {
+                if (noms[j].CompareTo(noms[j + 1]) > 0)
+                {
+                    string temp = noms[j];
+                    noms[j] = noms[j + 1];
+                    noms[j + 1] = temp;
+                }
+            }
+        }
+        
+        Console.WriteLine("Noms après tri:");
+        foreach (string nom in noms)
+        {
+            Console.WriteLine($"- {nom}");
+        }
+        
+        // Attention : la comparaison est sensible à la casse
+        string maj = "Alice";
+        string min = "alice";
+        Console.WriteLine($"'Alice' comparé à 'alice': {maj.CompareTo(min)}"); // < 0 (majuscules avant minuscules)
+        
+        // Cas d'usage : comparaison insensible à la casse
+        if (maj.ToLower().CompareTo(min.ToLower()) == 0)
+        {
+            Console.WriteLine("Les noms sont identiques (insensible à la casse)");
         }
         
         // IsNullOrEmpty() - Vérifier si vide ou null
