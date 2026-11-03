@@ -15,6 +15,7 @@ Le type `string` est l'un des plus riches en méthodes utiles pour manipuler du 
 | Méthode | Signature | Description |
 |---------|-----------|-------------|
 | `Length` | `int Length { get; }` | Propriété qui retourne la longueur de la chaîne |
+| `s[index]` | `char s[int index]` | Retourne le caractère situé à l'index donné (0 = premier caractère) |
 | `ToUpper()` | `string ToUpper()` | Convertit tous les caractères en majuscules |
 | `ToLower()` | `string ToLower()` | Convertit tous les caractères en minuscules |
 | `Trim()` | `string Trim()` | Supprime les espaces en début et fin de chaîne |
@@ -27,6 +28,25 @@ Le type `string` est l'un des plus riches en méthodes utiles pour manipuler du 
 | `Split()` | `string[] Split(char separator)` | Divise la chaîne en tableau selon un séparateur |
 | `CompareTo()` | `int CompareTo(string strB)` | Compare deux chaînes (ordre alphabétique) |
 | `IsNullOrEmpty()` | `static bool IsNullOrEmpty(string value)` | Vérifie si une chaîne est null ou vide |
+
+### Accéder à un caractère
+
+Pour une chaîne `s`, l'expression `s[i]` donne le caractère situé à l'index `i`. Le résultat est de type `char`.
+
+Les index commencent à **0** : le premier caractère est `s[0]`, le dernier est `s[s.Length - 1]`. Un index en dehors de cet intervalle provoque une erreur à l'exécution.
+
+On peut **lire** un caractère ainsi, mais pas le modifier : `s[0] = 'A';` est interdit.
+
+```csharp
+string mot = "Bonjour";
+char premiere = mot[0];               // 'B'
+char derniere = mot[mot.Length - 1];  // 'r'
+
+for (int i = 0; i < mot.Length; i++)
+{
+    Console.WriteLine($"Caractère {i} : {mot[i]}");
+}
+```
 
 ### Exemples pratiques
 
@@ -48,6 +68,11 @@ class Program
         {
             Console.WriteLine("Mot de passe assez long");
         }
+        
+        // s[i] - Lire le caractère à l'index i (0 = premier)
+        string mot = "Bonjour";
+        Console.WriteLine($"Première lettre: {mot[0]}");                 // 'B'
+        Console.WriteLine($"Dernière lettre: {mot[mot.Length - 1]}");    // 'r'
         
         // ToUpper() - Convertir en majuscules
         Console.WriteLine($"Majuscules: {texte.ToUpper()}"); // Affiche: "  BONJOUR LE MONDE!  "

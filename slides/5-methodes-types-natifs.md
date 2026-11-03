@@ -59,6 +59,22 @@ bool commenceParAlice = email.StartsWith("alice");  // True
 
 ---
 
+## Type `string` - Accéder à un caractère
+
+Pour une chaîne `s`, **`s[i]`** donne le caractère à l'index `i` (`char`).
+
+```csharp
+string mot = "Bonjour";
+Console.WriteLine(mot[0]);               // 'B'
+Console.WriteLine(mot[mot.Length - 1]);  // 'r'
+```
+
+- Le premier caractère est à l'index **0**
+- Le dernier est à l'index **`Length - 1`**
+- On peut lire un caractère, pas le remplacer
+
+---
+
 ## Type `string` - Transformation
 
 ### Changement de casse
@@ -407,7 +423,7 @@ if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') { /* ... */ }
 ## Récapitulatif
 
 ### Les types et leurs méthodes clés
-- **`string`** : `Length`, `ToUpper()`, `Contains()`, `Split()`, `Trim()`
+- **`string`** : `Length`, `s[i]`, `ToUpper()`, `Contains()`, `Split()`, `Trim()`
 - **`int`** : `ToString()`, `Parse()`, `TryParse()`, `CompareTo()`
 - **`double`** : Même que `int` + `IsNaN()`, `IsInfinity()`
 - **`bool`** : `ToString()`, `Parse()`, `TryParse()`
