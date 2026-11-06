@@ -31,7 +31,13 @@ int[] notes = new int[5];
 int[] notes = new int[] { 15, 12, 18, 14, 16 };
 // Syntaxe simplifiée (équivalente)
 int[] notes = { 15, 12, 18, 14, 16 };
+// Depuis C# 12 : des crochets
+int[] notes = [15, 12, 18, 14, 16];
 ```
+
+::: info Depuis C# 12
+Les crochets créent un tableau à **une** dimension. Cette écriture est disponible à partir de C# 12, donc dans un projet .NET 8, .NET 9 ou .NET 10. Les formes avec `new` et avec des accolades restent valables.
+:::
 
 ### Comprendre l'indexation
 
@@ -107,6 +113,10 @@ int[,] grille = new int[,] {
 Console.WriteLine(grille[1, 2]);  // Affiche 7
 ```
 
+::: warning Les crochets ne créent pas cette grille
+Les crochets du C# 12, comme `[1, 2, 3]`, créent une seule rangée (`int[]`) ou une liste. Ici, `int[,]` est une grille : un indice pour la ligne, un autre pour la colonne. Le compilateur refuse `int[,] grille = [[1, 2], [3, 4]];`. On crée la grille avec `new`, puis les accolades remplissent les cases, comme ci-dessus.
+:::
+
 **Représentation visuelle :**
 
 |         | Col 0 | Col 1 | Col 2 | Col 3 |
@@ -140,7 +150,12 @@ irregular[2] = new int[1] { 7 };              // 1 élément
 
 // Accès : irregular[ligne][colonne]
 Console.WriteLine(irregular[1][2]);  // Affiche 5
+
+// Depuis C# 12, chaque ligne est un tableau à une dimension : les crochets conviennent
+int[][] irregular = [[1, 2], [3, 4, 5, 6], [7]];
 ```
+
+Un tableau de tableaux (`int[][]`) n'est pas une grille `int[,]`. Chaque ligne est un tableau séparé, ce qui explique pourquoi les crochets sont acceptés ici et refusés pour `int[,]`.
 
 ### Propriétés utiles des tableaux
 
@@ -177,6 +192,8 @@ List<int> nombres = new List<int>();
 
 // Création avec des valeurs initiales
 List<string> prenoms = new List<string> { "Alice", "Bob", "Charlie" };
+// Depuis C# 12 : des crochets, à la place de new List<string> { ... }
+List<string> prenoms = ["Alice", "Bob", "Charlie"];
 
 // Ajouter des éléments
 nombres.Add(10);
@@ -233,7 +250,7 @@ foreach (int note in notes)
 |---------|---------|-------|
 | **Taille** | Fixe à la création | Dynamique |
 | **Performance** | Plus rapide | Légèrement plus lente |
-| **Syntaxe** | `int[] tab = new int[5]` | `List<int> list = new List<int>()` |
+| **Syntaxe** | `int[] tab = new int[5]` ou, depuis C# 12, `[1, 2, 3]` | `List<int> list = new List<int>()` ou, depuis C# 12, `[1, 2, 3]` |
 | **Méthodes** | Limitées | Nombreuses (Add, Remove, etc.) |
 | **Quand utiliser** | Taille connue et constante | Taille variable, ajouts/suppressions |
 

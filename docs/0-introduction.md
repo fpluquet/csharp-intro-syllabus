@@ -51,9 +51,28 @@
   | **C# 9.0**       | 2020      | Records, `init` setters, top-level statements                        |
   | **C# 10.0**      | 2021      | `global using`, record structs, espaces de noms simplifiés           |
   | **C# 11.0**      | 2022      | Raw string literals, membres requis, modèles de liste                |
-  | **C# 12.0**      | 2023      | Primary constructors, inline arrays, paramètres lambda facultatifs   |
+  | **C# 12.0**      | 2023      | Expressions de collection `[...]`, primary constructors              |
   | **C# 13.0**      | 2024      | Améliorations `params`, `ref struct` en async, nouvelles syntaxes    |
+  | **C# 14.0**      | 2025      | Mot-clé `field`, membres d'extension. Version par défaut de .NET 10  |
 
+## C# et .NET
+
+- **C#** est le langage : la grammaire du code que vous écrivez.
+- **.NET** est la plateforme : les bibliothèques, le runtime (le CLR) et les outils qui compilent puis exécutent ce code.
+- Chaque côté a son propre numéro. Un projet **.NET 10** est compilé en **C# 14**.
+
+| .NET | C# par défaut |
+| ---- | ------------- |
+| **.NET 10** | **C# 14** |
+| .NET 9 | C# 13 |
+| .NET 8 | C# 12 |
+| .NET 7 | C# 11 |
+| .NET 6 | C# 10 |
+| .NET 5 | C# 9 |
+
+::: info Les versions s'empilent
+Chaque version de C# reprend les précédentes. Une nouveauté apparue en C# 12, comme les crochets `[1, 2, 3]`, fonctionne dans un projet .NET 10, parce que ce projet est compilé en C# 14.
+:::
 
 ## Format d'un programme C#
 
